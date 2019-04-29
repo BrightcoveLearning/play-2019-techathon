@@ -8,7 +8,11 @@ const initialState = {
 /** see https://redux-docs.netlify.com/basics/reducers */
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actions.LIST_VIDEOS_BY_ACCOUNT:
+    case actions.REQUEST_VIDEO_LIST:
+      return Object.assign({}, state, {
+        accountId: action.accountId
+      });
+    case actions.RECEIVE_VIDEO_LIST:
       return Object.assign({}, state, {
         videos: action.videos
       });

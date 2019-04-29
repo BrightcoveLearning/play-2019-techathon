@@ -4,35 +4,16 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';
 import { rootReducer } from './reducers';
-import listVideosByAccountAction from './actions';
 
-const store = createStore(rootReducer);
 const rootElement = document.getElementById('root');
-
-console.log('initial state', store.getState());
-
-const unsubscribe = store.subscribe(() => console.log(store.getState()));
-
-store.dispatch(listVideosByAccountAction([
-    {
-      "id": "6029594036001",
-      "account_id": "6027103981001",
-      "ad_keys": null,
-      "clip_source_video_id": null,
-      "complete": true,
-      "created_at": "2019-04-24T20:29:37.624Z",
-      "created_by": {
-        "type": "user",
-        "id": "76076156632",
-        "email": "playtechathon@brightcove.com"
-      }
-    }
-  ]
-));
-
-unsubscribe();
+const store = createStore(
+  rootReducer,
+  // lets us dispatch functions
+  applyMiddleware(thunkMiddleware)
+);
 
 ReactDOM.render(
   <Provider store={store}>
