@@ -1,3 +1,4 @@
+/** see https://redux-docs.netlify.com/basics/reducers */
 import * as actions from './actions';
 
 const initialState = {
@@ -5,7 +6,6 @@ const initialState = {
   videos: []
 };
 
-/** see https://redux-docs.netlify.com/basics/reducers */
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case actions.REQUEST_VIDEO_LIST:
