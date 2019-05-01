@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './analytics-fetcher.css';
 import {connect} from "react-redux";
 
@@ -19,7 +19,7 @@ class AnalyticsFetcher extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        analyticData:state.analyticData,
+        analyticData: state.analyticData,
     };
 };
 
