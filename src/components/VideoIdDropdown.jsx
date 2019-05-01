@@ -5,7 +5,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  fetchVideoList
+  fetchVideoList,
+  updateSelectedVideo,
+  getAnalyticsForVideo
 } from '../actions';
 
 class VideoIdDropdown extends Component {
@@ -13,42 +15,50 @@ class VideoIdDropdown extends Component {
     super(props, context);
 
     this.getVideoList = this.getVideoList.bind(this);
+    this.handleVideoChange = this.handleVideoChange.bind(this);
+  }
+
+  componentDidMount() {
+    this.getVideoList();
   }
 
   renderOptions() {
-    const { videoIds } = this.props;
+    const {videoIds} = this.props;
 
     return videoIds.map((videoId, i) => {
       return (
-        <option value={videoId} key={`videoId-${i}`}>
-          {videoId}
-        </option>
+          <option value={videoId} key={`videoId-${i}`}>
+            {videoId}
+          </option>
       );
     });
   }
 
   render() {
     return (
-      <div>
-        <p>VideoIdDropdown</p>
-        <p>
-          <button onClick={this.getVideoList}>
-            Get videos
-          </button>
-        </p>
-        <select>
-          {
-            this.renderOptions()
-          }
-        </select>
-      </div>
+        <div>
+          <p>VideoIdDropdown</p>
+          <select onChange={this.handleVideoChange}>
+            <option>SELECT VIDEO</option>
+            {
+              this.renderOptions()
+            }
+          </select>
+        </div>
     );
   }
 
   getVideoList() {
-    const { dispatch } = this.props;
+    const {dispatch} = this.props;
 
     dispatch(fetchVideoList());
+  }
+
+  handleVideoChange = event => {
+    const {dispatch} = this.props;
+
+    dispatch(updateSelectedVideo(event.target.value));
+    dispatch(getAnalyticsForVideo(event.target.value));
   }
 };
 
@@ -57,7 +67,8 @@ class VideoIdDropdown extends Component {
  */
 const mapStateToProps = (state) => {
   return {
-    videoIds: state.videos.map((e) => e.id)
+    videoIds: state.videos.map((e) => e.id),
+    selectedVideo: state.selectedVideo
   };
 };
 

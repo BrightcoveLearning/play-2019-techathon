@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import configureStore from '../configureStore';
 import './App.css';
 import VideoIdDropdown from './VideoIdDropdown';
-import AnalyticsFetcher from './analytics-fetcher';
+import AnalyticsFetcher from './AnalyticsFetcher';
 
 const store = configureStore();
 
