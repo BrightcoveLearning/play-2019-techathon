@@ -15,18 +15,32 @@ class VideoIdDropdown extends Component {
     this.getVideoList = this.getVideoList.bind(this);
   }
 
-  render() {
-    const { videos } = this.props;
+  renderOptions() {
+    const { videoIds } = this.props;
 
+    return videoIds.map((videoId, i) => {
+      return (
+        <option value={videoId} key={`videoId-${i}`}>
+          {videoId}
+        </option>
+      );
+    });
+  }
+
+  render() {
     return (
       <div>
-        VideoIdDropdown
+        <p>VideoIdDropdown</p>
         <p>
-          {videos.join(', ')}
+          <button onClick={this.getVideoList}>
+            Get videos
+          </button>
         </p>
-        <button onClick={this.getVideoList}>
-          Get videos
-        </button>
+        <select>
+          {
+            this.renderOptions()
+          }
+        </select>
       </div>
     );
   }
@@ -42,13 +56,9 @@ class VideoIdDropdown extends Component {
  * see https://redux-docs.netlify.com/basics/usage-with-react#implementing-container-components
  */
 const mapStateToProps = (state) => {
-  const videoIds = state.videos.map((e) => e.id);
-
   return {
-    videos: videoIds
+    videoIds: state.videos.map((e) => e.id)
   };
-}
-
-// mapDispatchToProps
+};
 
 export default connect(mapStateToProps)(VideoIdDropdown);

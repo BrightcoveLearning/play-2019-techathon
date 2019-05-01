@@ -10,9 +10,7 @@ export default function App() {
   return (
     <Provider store={store}>
     <div className="App">
-      <header className="App-header">
-        <VideoIdDropdown />
-      </header>
+      <VideoIdDropdown />
     </div>
     </Provider>
   );
