@@ -20,8 +20,6 @@ class AnalyticsFetcher extends Component {
 const mapStateToProps = (state) => {
     return {
         analyticData:state.analyticData,
-        selectedVideo: state.selectedVideo,
-        videoIds: state.videos.map((e) => e.id)
     };
 };
 

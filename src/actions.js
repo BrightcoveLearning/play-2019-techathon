@@ -66,17 +66,8 @@ export function getAnalyticsForVideo(video) {
 
     let apiCall = `https://analytics.api.brightcove.com/v1/data?accounts=6027103981001&dimensions=video&fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed&video=${video}`;
     let method = 'GET';
-    const data = {
-      apiCall: apiCall,
-      method: method
-    };
-    fetch('http://play-oauth-proxy.applications.us-east-1.prod.deploys.brightcove.com/api/defaultCreds', {
-      method: 'POST', // or 'PUT'
-      body: JSON.stringify(data), // data can be `string` or {object}!
-      headers:{
-        'Content-Type': 'application/json'
-      }
-    }).then(res => res.json())
+
+    makeApiCall(apiCall, method)
         .then(response => {
           console.log('Success:', JSON.stringify(response));
 
