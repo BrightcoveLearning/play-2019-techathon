@@ -6,17 +6,19 @@ class AnalyticsFetcher extends Component {
   constructor (props, context) {
     super(props, context);
     this.state = {
-      analyticData: {}
+      analyticData:  null
     };
     this.getAnalyticsForVideo = this.getAnalyticsForVideo.bind(this);
   }
 
-  shouldComponentUpdate (nextProps) {
-    return (this.props.selectedVideo !== nextProps.selectedVideo);
+  componentDidMount () {
+    this.getAnalyticsForVideo(this.props.selectedVideo);
   }
 
-  componentDidUpdate () {
-    this.getAnalyticsForVideo(this.props.selectedVideo);
+  componentDidUpdate (prevProps) {
+    if (this.props.selectedVideo !== prevProps.selectedVideo ) {
+      this.getAnalyticsForVideo(this.props.selectedVideo);
+    }
   }
 
   getAnalyticsForVideo (video) {
@@ -34,7 +36,9 @@ class AnalyticsFetcher extends Component {
     return (
       <div>
         <label>Video Analytics:</label>
-        <pre>{JSON.stringify(this.state.analyticData, null, 2)}</pre>
+        { this.state && this.state.analyticData &&
+          <pre>{ JSON.stringify(this.state.analyticData, null, 2)}</pre>
+        }
       </div>
     );
   }
