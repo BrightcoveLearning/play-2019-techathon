@@ -1,6 +1,6 @@
 import fetch from 'cross-fetch';
 
-export default function makeApiCall(url, method) {
+export default function makeApiCall (url, method) {
   // This will not be accessible past the workshop date
   const oAuthProxyUrl = 'http://play-oauth-proxy.applications.us-east-1.prod.deploys.brightcove.com/api/defaultCreds';
   const options = {

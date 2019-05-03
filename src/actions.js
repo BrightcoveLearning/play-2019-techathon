@@ -9,14 +9,14 @@ export const RECEIVE_VIDEO_ANALYTICS = 'RECEIVE_VIDEO_ANALYTICS';
 
 /** Action Creators */
 
-export function requestVideoList(accountId = '6027103981001') {
+export function requestVideoList (accountId = '6027103981001') {
   return {
     type: REQUEST_VIDEO_LIST,
     accountId
   };
 }
 
-export function receiveVideoList(accountId = '6027103981001', data) {
+export function receiveVideoList (accountId = '6027103981001', data) {
   return {
     type: RECEIVE_VIDEO_LIST,
     accountId,
@@ -25,14 +25,14 @@ export function receiveVideoList(accountId = '6027103981001', data) {
   };
 }
 
-export function updateSelectedVideo(video) {
+export function updateSelectedVideo (video) {
   return {
     type: RECEIVE_SELECTED_VIDEO,
     selectedVideo: video
   };
 }
 
-export function updateVideoAnalytics(data) {
+export function updateVideoAnalytics (data) {
   return {
     type: RECEIVE_VIDEO_ANALYTICS,
     analyticData: data
@@ -42,7 +42,7 @@ export function updateVideoAnalytics(data) {
 /**
  * see https://redux-docs.netlify.com/advanced/async-actions#async-action-creators
  */
-export function fetchVideoList(accountId) {
+export function fetchVideoList (accountId) {
   return function (dispatch) {
     // dispatches action to app that the video list
     // is being requested
@@ -59,7 +59,7 @@ export function fetchVideoList(accountId) {
   };
 }
 
-export function getAnalyticsForVideo(video) {
+export function getAnalyticsForVideo (video) {
   return function (dispatch) {
     const apiCall = `https://analytics.api.brightcove.com/v1/data?accounts=6027103981001&dimensions=video&fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed&video=${video}`;
     const method = 'GET';
