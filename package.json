@@ -17,7 +17,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint . --fix"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -35,6 +36,8 @@
     ]
   },
   "devDependencies": {
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-react": "^7.13.0",
     "redux-devtools": "^3.5.0"
   }
 }
