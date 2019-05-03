@@ -11,4 +11,5 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/co
 This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
 
 ### React Router
+
 https://redux-docs.netlify.com/advanced/usage-with-react-router
