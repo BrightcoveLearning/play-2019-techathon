@@ -12,7 +12,7 @@ export const RECEIVE_VIDEO_ANALYTICS = 'RECEIVE_VIDEO_ANALYTICS';
 export function requestVideoList(accountId = '6027103981001') {
   return {
     type: REQUEST_VIDEO_LIST,
-    accountId,
+    accountId
   };
 }
 
@@ -21,21 +21,21 @@ export function receiveVideoList(accountId = '6027103981001', data) {
     type: RECEIVE_VIDEO_LIST,
     accountId,
     videos: data,
-    receivedAt: Date.now(),
+    receivedAt: Date.now()
   };
 }
 
 export function updateSelectedVideo(video) {
   return {
     type: RECEIVE_SELECTED_VIDEO,
-    selectedVideo: video,
+    selectedVideo: video
   };
 }
 
 export function updateVideoAnalytics(data) {
   return {
     type: RECEIVE_VIDEO_ANALYTICS,
-    analyticData: data,
+    analyticData: data
   };
 }
 

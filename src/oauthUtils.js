@@ -7,11 +7,11 @@ export default function makeApiCall(url, method) {
     method: 'POST',
     body: JSON.stringify({
       apiCall: url,
-      method,
+      method
     }),
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   };
 
   return fetch(oAuthProxyUrl, options).then(
