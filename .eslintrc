@@ -4,5 +4,9 @@
     "browser": true,
     "node": true
   },
-  "extends": ["airbnb", "plugin:react/recommended"]
+  "extends": ["standard", "standard-react"],
+  "rules": {
+        "comma-dangle": ["error", "never"],
+        "semi": 0
+    }
 }
