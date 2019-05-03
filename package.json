@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@brightcove/react-player-loader": "^1.2.0",
     "cross-fetch": "^3.0.2",
+    "global": "^4.3.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.3",
