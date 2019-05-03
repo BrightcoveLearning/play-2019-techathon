@@ -5,16 +5,18 @@ import './App.css';
 import VideoIdDropdown from './VideoIdDropdown';
 import AnalyticsFetcher from './AnalyticsFetcher';
 import BrightcovePlayer from './BrightcovePlayer';
+import VideoUploader from './VideoUploader';
 
 const store = configureStore();
 
-export default function App() {
+export default function App () {
   return (
     <Provider store={store}>
-      <div className="App">
+      <div className='App'>
         <VideoIdDropdown />
         <BrightcovePlayer />
         <AnalyticsFetcher />
+        <VideoUploader />
       </div>
     </Provider>
   );

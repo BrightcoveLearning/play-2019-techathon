@@ -2,27 +2,27 @@
  * A Container Component that renders a dropdown based on
  * the videos in the store.
  */
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   fetchVideoList,
   updateSelectedVideo,
   getAnalyticsForVideo
-} from "../actions";
+} from '../actions';
 
 class VideoIdDropdown extends Component {
-  constructor(props, context) {
+  constructor (props, context) {
     super(props, context);
 
     this.getVideoList = this.getVideoList.bind(this);
     this.handleVideoChange = this.handleVideoChange.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.getVideoList();
   }
 
-  renderOptions() {
+  renderOptions () {
     const { videoIds } = this.props;
 
     return videoIds.map((videoId, i) => (
@@ -32,19 +32,7 @@ class VideoIdDropdown extends Component {
     ));
   }
 
-  render() {
-    return (
-      <div>
-        <p>VideoIdDropdown</p>
-        <select onChange={this.handleVideoChange}>
-          <option>SELECT VIDEO</option>
-          {this.renderOptions()}
-        </select>
-      </div>
-    );
-  }
-
-  getVideoList() {
+  getVideoList () {
     const { dispatch } = this.props;
 
     dispatch(fetchVideoList());
@@ -56,6 +44,18 @@ class VideoIdDropdown extends Component {
     dispatch(updateSelectedVideo(event.target.value));
     dispatch(getAnalyticsForVideo(event.target.value));
   };
+
+  render () {
+    return (
+      <div>
+        <p>VideoIdDropdown</p>
+        <select onChange={this.handleVideoChange}>
+          <option>SELECT VIDEO</option>
+          {this.renderOptions()}
+        </select>
+      </div>
+    );
+  }
 }
 
 /**

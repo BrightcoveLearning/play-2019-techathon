@@ -26,6 +26,30 @@ const rootReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         analyticData: action.analyticData
       });
+    case actions.REQUEST_VIDEO_CREATE:
+      return Object.assign({}, state, {
+        uploadVideoInfo: {
+          name: action.videoName,
+          type: action.mimeType,
+          size: action.fileSize
+        }
+      });
+    case actions.RECEIVE_VIDEO_CREATE:
+      return Object.assign({}, state, {
+        createdVideoInfo: action.createdVideoData
+      });
+    case actions.RECEIVE_SOURCE_FILE_UPLOAD:
+      return Object.assign({}, state, {
+        remoteUploadInfo: action.remoteUploadInfo
+      });
+    case actions.RECEIVE_VIDEO_INGEST:
+      return Object.assign({}, state, {
+        ingestJobId: action.ingestJobId
+      });
+    case actions.RECEIVE_INGEST_STATUS:
+      return Object.assign({}, state, {
+        ingestJobStatus: action.ingestJobStatus
+      });
     default:
       return state;
   }
