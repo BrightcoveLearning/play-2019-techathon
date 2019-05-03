@@ -1,20 +1,43 @@
-import React, { Component } from "react";
-import "./analytics-fetcher.css";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import makeApiCall from '../oauthUtils';
+import './analytics-fetcher.css';
 
 class AnalyticsFetcher extends Component {
-  render() {
+  constructor (props, context) {
+    super(props, context);
+    this.state = {
+      analyticData: {}
+    };
+    this.getAnalyticsForVideo = this.getAnalyticsForVideo.bind(this);
+  }
+
+  shouldComponentUpdate (nextProps) {
+    return (this.props.selectedVideo !== nextProps.selectedVideo);
+  }
+
+  componentDidUpdate () {
+    this.getAnalyticsForVideo(this.props.selectedVideo);
+  }
+
+  getAnalyticsForVideo (video) {
+    const apiCall = `https://analytics.api.brightcove.com/v1/data?accounts=6027103981001&dimensions=video&fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed&video=${video}`;
+    const method = 'GET';
+    makeApiCall(apiCall, method)
+      .then((response) => {
+        console.log('Success:', JSON.stringify(response));
+        this.setState({ analyticData: response })
+      })
+      .catch(error => console.error('Error:', error))
+  }
+
+  render () {
     return (
       <div>
         <label>Video Analytics:</label>
-        <pre>{JSON.stringify(this.props.analyticData, null, 2)}</pre>
+        <pre>{JSON.stringify(this.state.analyticData, null, 2)}</pre>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  analyticData: state.analyticData
-});
-
-export default connect(mapStateToProps)(AnalyticsFetcher);
+export default AnalyticsFetcher;

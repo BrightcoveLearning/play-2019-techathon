@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './BrightcovePlayer.css';
-import { connect } from 'react-redux';
 import Player from '@brightcove/react-player-loader';
 
 class BrightcovePlayer extends Component {
@@ -13,22 +12,22 @@ class BrightcovePlayer extends Component {
     }
   };
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate (nextProps) {
     return this.props.selectedVideo !== nextProps.selectedVideo;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     this.playerRef.catalog.getVideo(this.props.selectedVideo, (error, video) => {
       this.playerRef.catalog.load(video);
     });
   }
 
-  render() {
+  render () {
     return (
       <Player
         attrs={{ id: 'videoPlayer' }}
-        accountId="6027103981001"
-        playerId="default"
+        accountId='6027103981001'
+        playerId='default'
         onSuccess={this.success}
         options={{
           controls: true,
@@ -39,8 +38,4 @@ class BrightcovePlayer extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  selectedVideo: state.selectedVideo
-});
-
-export default connect(mapStateToProps)(BrightcovePlayer);
+export default BrightcovePlayer;

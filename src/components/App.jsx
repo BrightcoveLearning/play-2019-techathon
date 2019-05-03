@@ -1,21 +1,28 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import configureStore from '../configureStore';
+import React, { Component } from 'react';
 import './App.css';
 import VideoIdDropdown from './VideoIdDropdown';
 import AnalyticsFetcher from './AnalyticsFetcher';
 import BrightcovePlayer from './BrightcovePlayer';
 
-const store = configureStore();
+export default class App extends Component {
+  constructor (props) {
+    super(props);
+    this.handleVideoChange = this.handleVideoChange.bind(this);
+    this.state = {
+      selectedVideo: null
+    };
+  }
 
-export default function App() {
-  return (
-    <Provider store={store}>
-      <div className="App">
-        <VideoIdDropdown />
-        <BrightcovePlayer />
-        <AnalyticsFetcher />
+  handleVideoChange (video) {
+    this.setState({ selectedVideo: video });
+  };
+  render () {
+    return (
+      <div className='App'>
+        <VideoIdDropdown onHandleVideoChange={this.handleVideoChange} />
+        <BrightcovePlayer selectedVideo={this.state.selectedVideo} />
+        <AnalyticsFetcher selectedVideo={this.state.selectedVideo} />
       </div>
-    </Provider>
-  );
+    );
+  }
 }

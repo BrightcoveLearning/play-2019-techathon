@@ -1,44 +1,6 @@
 /** see https://redux-docs.netlify.com/basics/actions */
 import makeApiCall from './oauthUtils';
 
-/** Action Types */
-export const REQUEST_VIDEO_LIST = 'REQUEST_VIDEO_LIST';
-export const RECEIVE_VIDEO_LIST = 'RECEIVE_VIDEO_LIST';
-export const RECEIVE_SELECTED_VIDEO = 'RECEIVE_SELECTED_VIDEO';
-export const RECEIVE_VIDEO_ANALYTICS = 'RECEIVE_VIDEO_ANALYTICS';
-
-/** Action Creators */
-
-export function requestVideoList (accountId = '6027103981001') {
-  return {
-    type: REQUEST_VIDEO_LIST,
-    accountId
-  };
-}
-
-export function receiveVideoList (accountId = '6027103981001', data) {
-  return {
-    type: RECEIVE_VIDEO_LIST,
-    accountId,
-    videos: data,
-    receivedAt: Date.now()
-  };
-}
-
-export function updateSelectedVideo (video) {
-  return {
-    type: RECEIVE_SELECTED_VIDEO,
-    selectedVideo: video
-  };
-}
-
-export function updateVideoAnalytics (data) {
-  return {
-    type: RECEIVE_VIDEO_ANALYTICS,
-    analyticData: data
-  };
-}
-
 /**
  * see https://redux-docs.netlify.com/advanced/async-actions#async-action-creators
  */
@@ -53,9 +15,6 @@ export function fetchVideoList (accountId) {
       'https://cms.api.brightcove.com/v1/accounts/6027103981001/videos',
       'GET',
     ).then(json => dispatch(receiveVideoList(accountId, json)));
-    // dispatches action to app that the video list
-    // has returned. This will then be made available
-    // to the store by our reducer
   };
 }
 
