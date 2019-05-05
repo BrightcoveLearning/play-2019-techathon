@@ -139,8 +139,8 @@ class VideoUploader extends Component {
 /**
  * see https://redux-docs.netlify.com/basics/usage-with-react#implementing-container-components
  */
-const mapStateToProps = state => ({
-  accountId: state.accountId,
+const mapStateToProps = (state) => ({
+  accountId: state.base.accountId,
   ingestJob: state.currentIngest
 });
 

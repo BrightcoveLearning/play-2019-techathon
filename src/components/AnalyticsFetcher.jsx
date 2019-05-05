@@ -14,7 +14,7 @@ class AnalyticsFetcher extends Component {
 }
 
 const mapStateToProps = state => ({
-  analyticData: state.analyticData
+  analyticData: state.base.analyticData
 });
 
 export default connect(mapStateToProps)(AnalyticsFetcher);

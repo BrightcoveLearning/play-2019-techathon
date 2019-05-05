@@ -25,4 +25,8 @@ export default function makeApiCall (url, method, apiPayload) {
       // https://github.com/facebook/react/issues/6895
       error => console.error('ERROR', error),
     );
-}
+};
+
+export function makeS3Call (signedUrl, options) {
+  return fetch(signedUrl, options)
+};

@@ -1,4 +1,5 @@
 /** see https://redux-docs.netlify.com/basics/reducers */
+import { combineReducers } from 'redux'
 import * as actions from './actions';
 
 const initialState = {
@@ -8,9 +9,73 @@ const initialState = {
   analyticData: null
 };
 
-const rootReducer = (state = initialState, action) => {
-  let ingestJobId;
-  let updatedIngest;
+const remoteUploadReducer = (state = {}, action) => {
+  switch (action.type) {
+    case actions.REQUEST_SOURCE_FILE_UPLOAD:
+      return Object.assign({}, state, {
+        accountId: action.accountId,
+        videoId: action.videoId,
+        videoName: action.videoName
+      });
+    case actions.RECEIVE_SOURCE_FILE_UPLOAD:
+      return Object.assign({}, state, action.remoteUploadInfo);
+    default:
+      return state;
+  }
+};
+
+const s3UploadReducer = (state = {}, action) => {
+  switch (action.type) {
+    case actions.REQUEST_UPLOAD_TO_S3:
+      return Object.assign({}, state, {
+        s3SignedUrl: action.s3SignedUrl,
+        videoData: action.videoData,
+        uploaded: false
+      });
+    case actions.RECEIVE_UPLOAD_TO_S3:
+      return Object.assign({}, state, {
+        uploaded: true
+      });
+    default:
+      return state;
+  }
+};
+
+const ingestByJobId = (currentIngest, jobId, update) => {
+  if (currentIngest.ingestJobId !== jobId) {
+    return currentIngest;
+  }
+
+  return Object.assign({}, currentIngest, update);
+};
+
+const ingestJobReducer = (state = {}, action) => {
+  switch (action.type) {
+    case actions.REQUEST_VIDEO_INGEST:
+      return Object.assign({}, state, {
+        ingestUrl: action.ingestUrl
+      });
+    case actions.RECEIVE_VIDEO_INGEST:
+      return Object.assign({}, state, {
+        ingestJobId: action.ingestJobId
+      });
+    case actions.REQUEST_INGEST_STATUS:
+      return ingestByJobId(state, action.ingestJobId, {
+        status: null
+      });
+    case actions.RECEIVE_INGEST_STATUS:
+      return ingestByJobId(state, action.ingestJobId, {
+        status: action.ingestJobStatus
+      });
+    default:
+      return state;
+  }
+};
+
+const baseReducer = (state = initialState, action) => {
+  if (actions[action.type]) {
+    console.debug(action.type);
+  }
 
   switch (action.type) {
     case actions.REQUEST_VIDEO_LIST:
@@ -41,83 +106,16 @@ const rootReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         createdVideoInfo: action.createdVideoData
       });
-    case actions.REQUEST_SOURCE_FILE_UPLOAD:
-      return Object.assign({}, state, {
-        currentRemoteUpload: {
-          accountId: action.accountId,
-          videoId: action.videoId,
-          videoName: action.videoName
-        }
-      });
-    case actions.RECEIVE_SOURCE_FILE_UPLOAD:
-      const updatedRemoteUpload = Object.assign({}, state.currentRemoteUpload, {
-        data: action.remoteUploadInfo
-      });
-
-      return Object.assign({}, state, {
-        currentRemoteUpload: updatedRemoteUpload
-      });
-    case actions.REQUEST_UPLOAD_TO_S3:
-      return Object.assign({}, state, {
-        currentS3Upload: {
-          s3SignedUrl: action.s3SignedUrl,
-          videoData: action.videoData,
-          uploaded: false
-        }
-      });
-    case actions.RECEIVE_UPLOAD_TO_S3:
-      const updatedS3Upload = Object.assign({}, state.currentS3Upload, {
-        uploaded: true
-      });
-
-      return Object.assign({}, state, {
-        currentS3Upload: updatedS3Upload
-      });
-    case actions.REQUEST_VIDEO_INGEST:
-      return Object.assign({}, state, {
-        currentIngest: {
-          ingestUrl: action.ingestUrl
-        }
-      });
-    case actions.RECEIVE_VIDEO_INGEST:
-      updatedIngest = Object.assign({}, state.currentIngest, {
-        ingestJobId: action.ingestJobId
-      });
-
-      return Object.assign({}, state, {
-        currentIngest: updatedIngest
-      });
-    case actions.REQUEST_INGEST_STATUS:
-      ingestJobId = action.ingestJobId;
-
-      if (state.currentIngest.ingestJobId !== ingestJobId) {
-        return state;
-      }
-
-      updatedIngest = Object.assign({}, state.currentIngest, {
-        status: null
-      });
-
-      return Object.assign({}, state, {
-        currentIngest: updatedIngest
-      });
-    case actions.RECEIVE_INGEST_STATUS:
-      ingestJobId = action.ingestJobId;
-
-      if (state.currentIngest.ingestJobId !== ingestJobId) {
-        return state;
-      }
-
-      updatedIngest = Object.assign({}, state.currentIngest, {
-        status: action.ingestJobStatus
-      });
-
-      return Object.assign({}, state, {
-        currentIngest: updatedIngest
-      });
     default:
       return state;
   }
 };
+
+const rootReducer = combineReducers({
+  base: baseReducer,
+  currentRemoteUpload: remoteUploadReducer,
+  currentS3Upload: s3UploadReducer,
+  currentIngest: ingestJobReducer
+});
 
 export default rootReducer;

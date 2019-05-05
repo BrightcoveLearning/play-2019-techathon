@@ -1,6 +1,5 @@
 /** see https://redux-docs.netlify.com/basics/actions */
-import makeApiCall from './oauthUtils';
-import fetch from 'cross-fetch';
+import makeApiCall, { makeS3Call } from './oauthUtils';
 
 /** Action Types */
 export const REQUEST_VIDEO_LIST = 'REQUEST_VIDEO_LIST';
@@ -208,9 +207,9 @@ export function uploadFile (accountId, videoId, remoteUploadInfo, videoFile) {
 
     dispatch(requestUploadToS3(signedUrl, videoFile));
 
-    return fetch(signedUrl, options)
+    return makeS3Call(signedUrl, options)
       .then(
-        response => {
+        (response) => {
           dispatch(receiveUploadToS3(true));
 
           return dispatch(postVideoIngest(accountId, videoId, ingestUrl));
