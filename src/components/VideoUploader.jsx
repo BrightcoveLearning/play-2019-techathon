@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  requestVideoCreate,
   createVideo
 } from '../actions';
 
@@ -14,8 +13,11 @@ class VideoUploader extends Component {
     this.handleReaderLoad = this.handleReaderLoad.bind(this);
 
     this.state = {
-      createdVideoInfo: null,
-      videoName: ''
+      videoName: '',
+      videoData: null,
+      videoSize: 0,
+      videoType: null,
+      sentUpload: false
     };
   }
 
@@ -24,15 +26,13 @@ class VideoUploader extends Component {
   }
 
   handleReaderLoad (name, size, type) {
-    const { accountId, dispatch } = this.props;
-
     return (event) => {
       this.setState({
         videoName: name,
-        videoData: event.target.result
+        videoData: event.target.result,
+        videoSize: size,
+        videoType: type
       });
-
-      return dispatch(requestVideoCreate(accountId, name, size, type));
     }
   }
 
@@ -46,36 +46,66 @@ class VideoUploader extends Component {
 
     const { name, size, type } = videoSelector.files[0];
 
-    this.fileReader.readAsArrayBuffer(videoSelector.files[0]);
     this.fileReader.onload = this.handleReaderLoad(name, size, type);
+    this.fileReader.readAsArrayBuffer(videoSelector.files[0]);
   }
 
   submitVideoForUpload () {
-    const { accountId, dispatch, uploadVideoInfo } = this.props;
+    const { dispatch, accountId } = this.props;
+    const { videoName, videoData, videoSize, videoType } = this.state;
 
-    if (!uploadVideoInfo) {
+    if (!videoName) {
       console.log('A local video file must be selected');
       return;
     }
 
-    return dispatch(createVideo(accountId, uploadVideoInfo.name, this.state.videoData));
+    this.setState({
+      sentUpload: true
+    });
+
+    return dispatch(createVideo(accountId, videoName, videoData, videoSize, videoType));
   }
 
-  render () {
-    const { ingestJobStatus } = this.props;
+  renderIngestJobStatus () {
+    const { sentUpload } = this.state;
+
+    if (!sentUpload) {
+      return null;
+    }
+
+    const { ingestJob } = this.props;
+    let jobState;
+    let errorMsg;
+
+    if (ingestJob && ingestJob.status) {
+      jobState = `status: ${ingestJob.status.state}`;
+      errorMsg = ingestJob.status.error_message
+        ? `error: ${ingestJob.status.error_message}`
+        : '';
+    }
 
     return (
       <div>
+        ingestJobStatus
+        {
+          ingestJob && ingestJob.status &&
+          <div>
+            <p>
+              {jobState}
+            </p>
+            <p>
+              {errorMsg}
+            </p>
+          </div>
+        }
+      </div>
+    );
+  }
+
+  render () {
+    return (
+      <div>
         <p>VideoUploader</p>
-        <p>
-          <label>
-            Provide a name for the video to upload:
-            <input
-              type='text'
-              placeholder='video name'
-            />
-          </label>
-        </p>
         <p>
           <input
             id='video-selector'
@@ -83,24 +113,24 @@ class VideoUploader extends Component {
             onChange={this.handleFileChange}
           />
         </p>
+        <p>
+          <label>
+            Provide a name for the video to upload:
+            <input
+              type='text'
+              placeholder='video name'
+              onChange={(e) => this.setState({ videoName: e.target.value })}
+              value={this.state.videoName}
+            />
+          </label>
+        </p>
         <button
           type='submit'
           onClick={this.submitVideoForUpload}
         >
           Upload Video
         </button>
-        {
-          ingestJobStatus &&
-          <div>
-            ingestJobStatus
-            <p>
-              {`status: ${ingestJobStatus.state}`}
-            </p>
-            <p>
-              {`error: ${ingestJobStatus.error_message || ''}`}
-            </p>
-          </div>
-        }
+        {this.renderIngestJobStatus()}
       </div>
     );
   }
@@ -111,10 +141,7 @@ class VideoUploader extends Component {
  */
 const mapStateToProps = state => ({
   accountId: state.accountId,
-  uploadVideoInfo: state.uploadVideoInfo,
-  createdVideo: state.createdVideoInfo,
-  remoteUploadInfo: state.remoteUploadInfo,
-  ingestJobStatus: state.ingestJobStatus
+  ingestJob: state.currentIngest
 });
 
 export default connect(mapStateToProps)(VideoUploader);

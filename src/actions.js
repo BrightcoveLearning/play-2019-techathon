@@ -68,9 +68,12 @@ export function receiveVideoCreate (data) {
   };
 };
 
-export function requestSourceFileUpload (videoId, videoName) {
+export function requestSourceFileUpload (accountId, videoId, videoName) {
   return {
-    type: REQUEST_SOURCE_FILE_UPLOAD
+    type: REQUEST_SOURCE_FILE_UPLOAD,
+    accountId,
+    videoId,
+    videoName
   };
 };
 
@@ -81,15 +84,25 @@ export function receiveSourceFileUpload (data) {
   };
 };
 
-export function receiveUploadToS3 (data) {
+export function requestUploadToS3 (signedUrl, videoFile) {
   return {
-    type: RECEIVE_UPLOAD_TO_S3
+    type: REQUEST_UPLOAD_TO_S3,
+    s3SignedUrl: signedUrl,
+    videoData: videoFile
   };
 };
 
-export function requestVideoIngest () {
+export function receiveUploadToS3 (succeeded) {
   return {
-    type: REQUEST_VIDEO_INGEST
+    type: RECEIVE_UPLOAD_TO_S3,
+    uploaded: succeeded
+  };
+};
+
+export function requestVideoIngest (ingestUrl) {
+  return {
+    type: REQUEST_VIDEO_INGEST,
+    ingestUrl
   };
 };
 
@@ -100,15 +113,17 @@ export function receiveVideoIngest (data) {
   };
 };
 
-export function requestIngestState () {
+export function requestIngestState (jobId) {
   return {
-    type: REQUEST_INGEST_STATUS
+    type: REQUEST_INGEST_STATUS,
+    ingestJobId: jobId
   };
 };
 
-export function receiveIngestStatus (data) {
+export function receiveIngestStatus (ingestJobId, data) {
   return {
     type: RECEIVE_INGEST_STATUS,
+    ingestJobId,
     ingestJobStatus: data
   };
 };
@@ -146,7 +161,7 @@ export function getAnalyticsForVideo (video) {
   };
 };
 
-export function createVideo (accountId, name, videoFile) {
+export function createVideo (accountId, name, videoData, size, mimeType) {
   return function (dispatch) {
     const apiCall = `https://cms.api.brightcove.com/v1/accounts/6027103981001/videos`;
     const method = 'POST';
@@ -154,11 +169,13 @@ export function createVideo (accountId, name, videoFile) {
       name
     };
 
+    requestVideoCreate(accountId, name, size, mimeType);
+
     return makeApiCall(apiCall, method, options)
       .then((data) => {
         dispatch(receiveVideoCreate(data));
 
-        return dispatch(getSourceFileUploadLocation(accountId, data.id, name, videoFile));
+        return dispatch(getSourceFileUploadLocation(accountId, data.id, name, videoData));
       });
   };
 };
@@ -167,6 +184,8 @@ export function getSourceFileUploadLocation (accountId, videoId, videoName, vide
   return function (dispatch) {
     const apiCall = `https://ingest.api.brightcove.com/v1/accounts/${accountId}/videos/${videoId}/upload-urls/${videoName}`;
     const method = 'GET';
+
+    dispatch(requestSourceFileUpload(accountId, videoId, videoName));
 
     return makeApiCall(apiCall, method)
       .then((data) => {
@@ -187,15 +206,24 @@ export function uploadFile (accountId, videoId, remoteUploadInfo, videoFile) {
       body: videoFile
     };
 
+    dispatch(requestUploadToS3(signedUrl, videoFile));
+
     return fetch(signedUrl, options)
       .then(
-        response => dispatch(postVideoIngest(accountId, videoId, ingestUrl)),
+        response => {
+          dispatch(receiveUploadToS3(true));
+
+          return dispatch(postVideoIngest(accountId, videoId, ingestUrl));
+        },
 
         // Do not use catch, because that will also catch
         // any errors in the dispatch and resulting render,
         // causing a loop of 'Unexpected batch number' errors.
         // https://github.com/facebook/react/issues/6895
-        error => console.error('ERROR', error),
+        error => {
+          console.error('ERROR', error);
+          return dispatch(receiveUploadToS3(false));
+        }
       );
   };
 };
@@ -210,6 +238,8 @@ export function postVideoIngest (accountId, videoId, ingestUrl) {
       }
     };
 
+    dispatch(requestVideoIngest(ingestUrl));
+
     return makeApiCall(apiCall, method, options)
       .then((data) => {
         dispatch(receiveVideoIngest(data));
@@ -220,16 +250,15 @@ export function postVideoIngest (accountId, videoId, ingestUrl) {
 };
 
 export function getIngestStatus (accountId, videoId, ingestJobId) {
-  accountId = 6027103981001;
-  videoId = 6032744881001;
-
   return function (dispatch) {
-    const apiCall = `https://cms.api.brightcove.com/v1/accounts/${accountId}/videos/${videoId}/ingest_jobs/ea437a7f-5b6d-4f3e-a995-950770cf077a`;
+    const apiCall = `https://cms.api.brightcove.com/v1/accounts/${accountId}/videos/${videoId}/ingest_jobs/${ingestJobId}`;
     const method = 'GET';
+
+    dispatch(requestIngestState(ingestJobId));
 
     return makeApiCall(apiCall, method)
       .then((data) => {
-        return dispatch(receiveIngestStatus(data));
+        return dispatch(receiveIngestStatus(ingestJobId, data));
       });
   };
 };
