@@ -3,6 +3,7 @@ import './App.css';
 import VideoIdDropdown from './VideoIdDropdown';
 import AnalyticsFetcher from './AnalyticsFetcher';
 import BrightcovePlayer from './BrightcovePlayer';
+import VideoUploader from './VideoUploader';
 
 export default class App extends Component {
   constructor (props) {
@@ -22,6 +23,7 @@ export default class App extends Component {
         <VideoIdDropdown onHandleVideoChange={this.handleVideoChange} />
         <BrightcovePlayer selectedVideo={this.state.selectedVideo} />
         <AnalyticsFetcher selectedVideo={this.state.selectedVideo} />
+        <VideoUploader />
       </div>
     );
   }
