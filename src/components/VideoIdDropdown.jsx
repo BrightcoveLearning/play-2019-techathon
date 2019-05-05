@@ -9,6 +9,7 @@ import {
   updateSelectedVideo,
   getAnalyticsForVideo
 } from '../actions';
+import './VideoIdDropdown.css';
 
 class VideoIdDropdown extends Component {
   constructor (props, context) {

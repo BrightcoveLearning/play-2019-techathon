@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import {
   createVideo
 } from '../actions';
+import './VideoUploader.css';
+import IngestJobStatus from './IngestJobStatus';
 
 class VideoUploader extends Component {
   constructor (props, context) {
@@ -66,43 +68,9 @@ class VideoUploader extends Component {
     return dispatch(createVideo(accountId, videoName, videoData, videoSize, videoType));
   }
 
-  renderIngestJobStatus () {
-    const { sentUpload } = this.state;
-
-    if (!sentUpload) {
-      return null;
-    }
-
-    const { ingestJob } = this.props;
-    let jobState;
-    let errorMsg;
-
-    if (ingestJob && ingestJob.status) {
-      jobState = `status: ${ingestJob.status.state}`;
-      errorMsg = ingestJob.status.error_message
-        ? `error: ${ingestJob.status.error_message}`
-        : '';
-    }
-
-    return (
-      <div>
-        ingestJobStatus
-        {
-          ingestJob && ingestJob.status &&
-          <div>
-            <p>
-              {jobState}
-            </p>
-            <p>
-              {errorMsg}
-            </p>
-          </div>
-        }
-      </div>
-    );
-  }
-
   render () {
+    const { videoName, sentUpload } = this.state;
+
     return (
       <div>
         <p>VideoUploader</p>
@@ -120,7 +88,7 @@ class VideoUploader extends Component {
               type='text'
               placeholder='video name'
               onChange={(e) => this.setState({ videoName: e.target.value })}
-              value={this.state.videoName}
+              value={videoName}
             />
           </label>
         </p>
@@ -130,7 +98,10 @@ class VideoUploader extends Component {
         >
           Upload Video
         </button>
-        {this.renderIngestJobStatus()}
+        {
+          sentUpload &&
+          <IngestJobStatus />
+        }
       </div>
     );
   }
@@ -140,8 +111,7 @@ class VideoUploader extends Component {
  * see https://redux-docs.netlify.com/basics/usage-with-react#implementing-container-components
  */
 const mapStateToProps = (state) => ({
-  accountId: state.base.accountId,
-  ingestJob: state.currentIngest
+  accountId: state.base.accountId
 });
 
 export default connect(mapStateToProps)(VideoUploader);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './analytics-fetcher.css';
+import './AnalyticsFetcher.css';
 import { connect } from 'react-redux';
 
 class AnalyticsFetcher extends Component {
