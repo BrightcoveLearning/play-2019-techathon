@@ -6,18 +6,26 @@ import {
 import './IngestJobStatus.css';
 
 class IngestJobStatus extends Component {
-  componentDidMount (prevProps) {
+  constructor(props, context) {
+    super(props, context);
+
+    this.checkStatus = this.checkStatus.bind(this);
+  }
+
+  checkStatus () {
     const { dispatch, accountId, videoId, ingestJob } = this.props;
 
-    if (!ingestJob.status || ingestJob.status !== 'finished') {
-      console.log('got here');
-      window.setInterval(
-        () => {
-          dispatch(getIngestStatus(accountId, videoId, ingestJob.ingestJobId))
-        },
-        1000 * 60
-      );
+    if (ingestJob.status) {
+      if (ingestJob.status.state === 'finished') {
+        window.clearInterval(this.checkStatus);
+      } else {
+        dispatch(getIngestStatus(accountId, videoId, ingestJob.jobId))
+      }
     }
+  }
+
+  componentDidMount (prevProps) {
+    this.checkStatus = window.setInterval(this.checkStatus, 1000 * 30);
   }
 
   render () {

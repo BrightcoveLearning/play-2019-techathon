@@ -35,7 +35,7 @@ const s3UploadReducer = (state = {}, action) => {
 };
 
 const ingestByJobId = (currentIngest, jobId, update) => {
-  if (currentIngest.ingestJobId !== jobId) {
+  if (currentIngest.jobId !== jobId) {
     return currentIngest;
   }
 
@@ -50,14 +50,14 @@ const ingestJobReducer = (state = {}, action) => {
       });
     case actions.RECEIVE_VIDEO_INGEST:
       return Object.assign({}, state, {
-        ingestJobId: action.ingestJobId
+        jobId: action.ingestJobId
       });
     case actions.REQUEST_INGEST_STATUS:
-      return ingestByJobId(state, action.ingestJobId, {
+      return ingestByJobId(state, action.jobId, {
         status: null
       });
     case actions.RECEIVE_INGEST_STATUS:
-      return ingestByJobId(state, action.ingestJobId, {
+      return ingestByJobId(state, action.jobId, {
         status: action.ingestJobStatus
       });
     default:
