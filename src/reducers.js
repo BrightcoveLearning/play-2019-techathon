@@ -50,15 +50,18 @@ const ingestJobReducer = (state = {}, action) => {
       });
     case actions.RECEIVE_VIDEO_INGEST:
       return Object.assign({}, state, {
-        jobId: action.ingestJobId
+        jobId: action.ingestJobId,
+        isRequestingStatus: false
       });
     case actions.REQUEST_INGEST_STATUS:
-      return ingestByJobId(state, action.jobId, {
-        status: null
+      return ingestByJobId(state, action.ingestJobId, {
+        status: null,
+        isRequestingStatus: true
       });
     case actions.RECEIVE_INGEST_STATUS:
-      return ingestByJobId(state, action.jobId, {
-        status: action.ingestJobStatus
+      return ingestByJobId(state, action.ingestJobId, {
+        status: action.ingestJobStatus,
+        isRequestingStatus: false
       });
     default:
       return state;

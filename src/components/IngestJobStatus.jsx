@@ -10,22 +10,23 @@ class IngestJobStatus extends Component {
     super(props, context);
 
     this.checkStatus = this.checkStatus.bind(this);
+    this.checkStatusInterval = null;
   }
 
   checkStatus () {
     const { dispatch, accountId, videoId, ingestJob } = this.props;
 
-    if (ingestJob.status) {
-      if (ingestJob.status.state === 'finished') {
-        window.clearInterval(this.checkStatus);
-      } else {
-        dispatch(getIngestStatus(accountId, videoId, ingestJob.jobId))
-      }
+    if (ingestJob && ingestJob.status && ingestJob.status.state === 'finished') {
+      window.clearInterval(this.checkStatusInterval);
+      this.checkStatus = null;
+    } else if (ingestJob && ingestJob.jobId && !ingestJob.isRequestingStatus && accountId && videoId) {
+      return dispatch(getIngestStatus(accountId, videoId, ingestJob.jobId));
     }
   }
 
-  componentDidMount (prevProps) {
-    this.checkStatus = window.setInterval(this.checkStatus, 1000 * 30);
+  componentDidMount () {
+    this.checkStatus();
+    this.checkStatusInterval = window.setInterval(this.checkStatus, 1000 * 10);
   }
 
   render () {

@@ -241,9 +241,7 @@ export function postVideoIngest (accountId, videoId, ingestUrl) {
 
     return makeApiCall(apiCall, method, options)
       .then((data) => {
-        dispatch(receiveVideoIngest(data));
-
-        return dispatch(getIngestStatus(accountId, videoId, data.id));
+        return dispatch(receiveVideoIngest(data));
       });
   };
 };
