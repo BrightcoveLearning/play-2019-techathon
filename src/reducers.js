@@ -2,13 +2,6 @@
 import { combineReducers } from 'redux'
 import * as actions from './actions';
 
-const initialState = {
-  accountId: 6027103981001,
-  videos: [],
-  selectedVideo: null,
-  analyticData: null
-};
-
 const remoteUploadReducer = (state = {}, action) => {
   switch (action.type) {
     case actions.REQUEST_SOURCE_FILE_UPLOAD:
@@ -72,10 +65,16 @@ const ingestJobReducer = (state = {}, action) => {
   }
 };
 
-const baseReducer = (state = initialState, action) => {
-  if (actions[action.type]) {
-    console.debug(action.type);
-  }
+const baseReducer = (state = {
+  accountId: 6027103981001,
+  videos: [],
+  selectedVideo: null,
+  analyticData: null
+}, action) => {
+  // This can be used to debug action flow
+  // if (actions[action.type]) {
+  //   console.debug(action.type);
+  // }
 
   switch (action.type) {
     case actions.REQUEST_VIDEO_LIST:

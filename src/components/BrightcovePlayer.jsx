@@ -44,7 +44,7 @@ class BrightcovePlayer extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   selectedVideo: state.base.selectedVideo
 });
 

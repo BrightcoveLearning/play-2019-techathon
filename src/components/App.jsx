@@ -9,6 +9,9 @@ import VideoUploader from './VideoUploader';
 
 const store = configureStore();
 
+// This can be used to debug application state
+// store.subscribe(() => console.log('store state', store.getState()));
+
 export default function App () {
   return (
     <Provider store={store}>
