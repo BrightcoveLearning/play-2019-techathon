@@ -146,27 +146,29 @@ class VideoUploader extends Component {
     const { accountId, videoName, videoId, sentUpload, ingestJobId } = this.state;
 
     return (
-      <div>
+      <div className='video-uploader'>
         <p>VideoUploader</p>
-        <p>
+        <label className='video-selector'>
+          Select a file to upload
           <input
             id='video-selector'
             type='file'
             onChange={this.handleFileChange}
           />
-        </p>
-        <p>
-          <label>
-            Provide a name for the video to upload:
-            <input
-              type='text'
-              placeholder='video name'
-              onChange={(e) => this.setState({ videoName: e.target.value })}
-              value={videoName}
-            />
-          </label>
-        </p>
+        </label>
+
+        <label>
+          Provide a name for the video to upload:
+          <input
+            className='video-name-input'
+            type='text'
+            placeholder='video name'
+            onChange={(e) => this.setState({ videoName: e.target.value })}
+            value={videoName}
+          />
+        </label>
         <button
+          className='video-upload-submit'
           type='submit'
           onClick={this.submitVideoForUpload}
         >
