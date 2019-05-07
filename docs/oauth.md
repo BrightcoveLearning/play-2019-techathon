@@ -4,7 +4,7 @@ In order to access Brightcove APIs, you must authenticate with Brightcove's [OAu
 
 ## Normal Workflow
 
-Normally, you would need to write a service that [requests access tokens](get-access-token) with the [Client Registration][client-reg] of your application and then make API calls.
+Normally, you would need to write a service that [requests access tokens][get-access-token] with the [Client Registration][client-reg] of your application and then make API calls.
 
 ## Project Workflow
 
@@ -76,7 +76,7 @@ curl -X POST \
 
 ## References
 
-- [OAuth API](oauth-api)
+- [OAuth API][oauth-api]
 - [Client Credential Flow][cred-flow]
 - [Getting Access Tokens][get-access-token]
 - [Managing API Authentication Credentials][client-reg]
