@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import "./analytics-fetcher.css";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import './AnalyticsFetcher.css';
+import { connect } from 'react-redux';
 
 class AnalyticsFetcher extends Component {
-  render() {
+  render () {
     return (
       <div>
         <label>Video Analytics:</label>
@@ -13,8 +13,8 @@ class AnalyticsFetcher extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  analyticData: state.analyticData
+const mapStateToProps = (state) => ({
+  analyticData: state.base.analyticData
 });
 
 export default connect(mapStateToProps)(AnalyticsFetcher);

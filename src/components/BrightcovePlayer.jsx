@@ -13,22 +13,27 @@ class BrightcovePlayer extends Component {
     }
   };
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate (nextProps) {
     return this.props.selectedVideo !== nextProps.selectedVideo;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     this.playerRef.catalog.getVideo(this.props.selectedVideo, (error, video) => {
+      if (error) {
+        console.error('could not get video', this.props.selectedVideo);
+        return;
+      }
+
       this.playerRef.catalog.load(video);
     });
   }
 
-  render() {
+  render () {
     return (
       <Player
         attrs={{ id: 'videoPlayer' }}
-        accountId="6027103981001"
-        playerId="default"
+        accountId='6027103981001'
+        playerId='default'
         onSuccess={this.success}
         options={{
           controls: true,
@@ -39,8 +44,8 @@ class BrightcovePlayer extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  selectedVideo: state.selectedVideo
+const mapStateToProps = (state) => ({
+  selectedVideo: state.base.selectedVideo
 });
 
 export default connect(mapStateToProps)(BrightcovePlayer);
