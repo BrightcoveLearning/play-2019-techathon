@@ -67,6 +67,9 @@ In this case, we are using a [dimension filter][where-filter] to restrict the re
 - [Overview: Analytics API][api-overview]
 - [API Reference][api-ref]
 - [Overview of Dimensions, Fields, and Parameters][fields-explain]
+- [Quick Start: Analytics API][quick-start]
+- [FAQ][faq]
+- [Glossary][glossary]
 - [All Time Video Views (Sample)][views-sample]
 
 [api-overview]: https://support.brightcove.com/overview-analytics-api-v1
@@ -76,3 +79,6 @@ In this case, we are using a [dimension filter][where-filter] to restrict the re
 [fields-explain]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters
 [where-filter]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters#filterValues
 [fields]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters#metrics
+[quick-start]: https://support.brightcove.com/quick-start-analytics-api
+[faq]: https://support.brightcove.com/faq-analytics-api
+[glossary]: https://support.brightcove.com/analytics-api-glossary
