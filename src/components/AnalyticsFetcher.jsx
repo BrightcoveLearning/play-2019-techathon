@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import makeApiCall from '../oauthUtils';
-import './analytics-fetcher.css';
+import './AnalyticsFetcher.css';
 
 class AnalyticsFetcher extends Component {
   constructor (props, context) {
@@ -26,7 +26,6 @@ class AnalyticsFetcher extends Component {
     const method = 'GET';
     makeApiCall(apiCall, method)
       .then((response) => {
-        console.log('Success:', JSON.stringify(response));
         this.setState({ analyticData: response })
       })
       .catch(error => console.error('Error:', error))
