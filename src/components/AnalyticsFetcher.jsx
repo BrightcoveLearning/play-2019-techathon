@@ -31,13 +31,87 @@ class AnalyticsFetcher extends Component {
       .catch(error => console.error('Error:', error))
   }
 
+  renderTableRow (item, index, headers) {
+    if (index === 'summary') {
+      item.video = 'summary';
+    }
+
+    return (
+      <tr key={`row-${index}`}>
+        {
+          headers.map((header, i) => {
+            return (
+              <td key={`value-${i}`}>
+                {item[header]}
+              </td>);
+          })
+        }
+      </tr>
+    );
+  }
+
+  renderHeaderRow (headers) {
+    const headerList = headers.map((header) => {
+      return header.replace(/_/g, ' ');
+    });
+
+    return (
+      <tr key='header'>
+        {
+          headerList.map((h, i) => (
+            <th key={`header-${i}`}>{h}</th>
+          ))
+        }
+      </tr>
+    );
+  }
+
+  buildHeaderList (item, mainField = 'video') {
+    const result = [];
+
+    result.push(mainField);
+
+    Object.keys(item).sort().forEach((key) => {
+      if (key !== mainField) {
+        result.push(key);
+      }
+    });
+
+    return result;
+  }
+
+  renderTable () {
+    const { analyticData } = this.state;
+
+    if (!analyticData || analyticData.item_count < 1) {
+      return null;
+    }
+
+    const { items, summary } = analyticData;
+    const headers = this.buildHeaderList(items[0]);
+
+    return (
+      <table>
+        <thead>
+          {this.renderHeaderRow(headers)}
+        </thead>
+        <tbody>
+          {
+            items.map((item, i) => this.renderTableRow(item, i, headers))
+          }
+        </tbody>
+        <tfoot>
+          {this.renderTableRow(summary, 'summary', headers)}
+        </tfoot>
+      </table>
+    );
+  }
+
   render () {
     return (
-      <div>
-        <label>Video Analytics:</label>
-        { this.state && this.state.analyticData &&
-          <pre>{ JSON.stringify(this.state.analyticData, null, 2)}</pre>
-        }
+      <div className='analytics-display'>
+        <h3>Video Analytics:</h3>
+        { this.renderTable() }
       </div>
     );
   }
