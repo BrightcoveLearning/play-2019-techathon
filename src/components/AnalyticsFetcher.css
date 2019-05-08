@@ -1,0 +1,26 @@
+.analytics-display {
+  margin: 30px 10px 30px 10px;
+}
+
+.analytics-display table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid;
+  font-size: small;
+}
+
+.analytics-display thead {
+  background: lightsteelblue;
+}
+
+.analytics-display tfoot {
+  background: lightgray;
+}
+
+.analytics-display thead th, tfoot td {
+  border: 2px solid black;
+}
+
+.analytics-display tbody td {
+  border: 2px solid gray;
+}
