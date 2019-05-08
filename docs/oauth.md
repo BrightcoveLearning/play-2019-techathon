@@ -14,7 +14,7 @@ For the Tech-A-Thon, we have setup an OAuth proxy to save time and focus on the 
 
 ### Usage of OAuth Proxy
 
-endpoint: `http://play-oauth-proxy.applications.us-east-1.prod.deploys.brightcove.com/api/defaultCreds`
+endpoint: `https://play-oauth-proxy.global.ssl.fastly.net/api/defaultCreds`
 method: `POST`
 
 The OAuth proxy will make the actual calls to Brightcove APIs on your behalf after authenticating and receiving an access token.
@@ -37,7 +37,7 @@ A GET request could look like this:
 
 ```bash
 curl -X POST \
-  http://play-oauth-proxy.applications.us-east-1.prod.deploys.brightcove.com/api/defaultCreds \
+  https://play-oauth-proxy.global.ssl.fastly.net/api/defaultCreds \
   -H 'Content-Type: application/json' \
   -d '{
 	"apiCall": "https://cms.api.brightcove.com/v1/accounts/<accountId>/videos",
@@ -49,7 +49,7 @@ A POST request could look like this:
 
 ```bash
 curl -X POST \
-  http://play-oauth-proxy.applications.us-east-1.prod.deploys.brightcove.com/api/defaultCreds \
+  https://play-oauth-proxy.global.ssl.fastly.net/api/defaultCreds \
   -H 'Content-Type: application/json' \
   -d '{
     "apiCall": "https://cms.api.brightcove.com/v1/accounts/<accountId>/videos",
@@ -64,7 +64,7 @@ You can also pass in your own clientId and clientSecret to the OAuth proxy by ad
 
 ```bash
 curl -X POST \
-  http://play-oauth-proxy.applications.us-east-1.prod.deploys.brightcove.com/api/defaultCreds \
+  https://play-oauth-proxy.global.ssl.fastly.net/api/defaultCreds \
   -H 'Content-Type: application/json' \
   -d '{
 	"apiCall": "https://cms.api.brightcove.com/v1/accounts/<accountId>/videos",
