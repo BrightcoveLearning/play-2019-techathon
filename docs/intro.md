@@ -55,6 +55,8 @@ There is not much provided in App.test.jsx currently, however the project is set
 
 ## Get All Videos in an Account
 
+### API Call
+
 The first thing we will want to do is to get information on the videos available for a specific Video Cloud account. We can use the [CMS API][cms] for this purpose. In this case, the [Get Videos][get-videos] operation is what we'll want to use.
 
 ```js
@@ -80,8 +82,6 @@ const getVideosEndpoint = `/accounts/${defaultAccountId}/videos`;
 
 Now we have the URL we need to call and we know that the [Get Videos][get-videos] operation is a `GET` to that URL. So we can make use of the `makeApiCall(url, method)` method in [oauthUtils.js][oauthUtils] to make the API call through the OAuth proxy we have setup for today. This method returns a [Promise][promise] so we'll need to capture the response in the `then` method. The `makeApiCall` will return the response as a JSON object if the request was successful or log an error to the browser console if the request failed.
 
-If the request was successful, we will receive all the information about the videos in the Video Cloud account as an Array of Objects, with each Object containing information about a single video in the account's Catalog.
-
 ```js
 // Using ES6 imports
 import makeApiCall from '../oauthUtils.js';
@@ -96,6 +96,171 @@ makeApiCall(cmsBaseUrl + getVideosEndpoint, 'GET')
     console.log('video response', videos);
   });
 ```
+
+If the request was successful, we will receive all the information about the videos in the Video Cloud account as an Array of Objects, with each Object containing information about a single video in the account's Catalog.
+
+### Interactive UI
+
+Let's think about how we can use this information to our advantage. We could provide a dropdown in which a user can select the video that they would like to see information about. Let's create a file `src/components/VideoIdDropdown.jsx` to store this dropdown, and create a React component to select a video by videoId.
+
+```js
+// src/components/VideoIdDropdown.jsx
+// These need to be imported to create a React component
+import React, { Component } from 'react';
+
+class VideoIdDropdown extends Component {
+  render () {
+    return (
+      <div>
+        <select>
+          <option>Select VideoId</option>
+        </select>
+      </div>
+    );
+  }
+};
+
+// we should export the class for use in other files
+export default VideoIdDropdown;
+```
+
+Now we can add our React component to `App.jsx`. After that, we will render this component in our application.
+
+```js
+// src/components/App.jsx
+import React, { Component } from 'react';
+import './App.css';
+import VideoIdDropdown from './VideoIdDropdown';
+
+export default class App extends Component {
+  render () {
+    return (
+      <div className='App'>
+        <VideoIdDropdown />
+      </div>
+    );
+  }
+};
+```
+
+If you run `npm start` in the project it will start a local server that renders our application!
+
+Now we'll want to reuse some of the code from before to make an API call. Let's create a new class method `fetchVideoList`.
+
+```js
+// src/components/VideoIdDropdown.jsx
+import React, { Component } from 'react';
+// import our utlity method
+import makeApiCall from '../oauthUtils';
+
+class VideoIdDropdown extends Component {
+
+  fetchVideoList () {
+    const defaultAccountId = '6027103981001';
+    // CMS API
+    const cmsBaseUrl = 'https://cms.api.brightcove.com/v1';
+    const getVideosEndpoint = `/accounts/${defaultAccountId}/videos`;
+
+    makeApiCall(cmsBaseUrl + getVideosEndpoint, 'GET')
+      .then((videos) => {
+        console.log('video response', videos);
+      });
+  }
+
+  render () {
+    return (
+      <div>
+        <select>
+          <option>Select VideoId</option>
+        </select>
+      </div>
+    );
+  }
+};
+
+// we should export the class for use in other files
+export default VideoIdDropdown;
+```
+
+At this point, we aren't actually calling `fetchVideoList` at all, so we need to decide when to do that. We want the dropdown to be populated with the videoIds when the `VideoIdDropdown` component is first created, so we should look at the [React Lifecycle methods][lifecycle] to decide which point in the component's lifecycle is best to make the API call. In our case, `componentDidMount` is a good option as it is within the "commit phase" when we can make changes to the DOM.
+
+```js
+// src/components/VideoIdDropdown.jsx
+
+class VideoIdDropdown extends Component {
+  componentDidMount () {
+    this.fetchVideoList();
+  }
+
+  ...
+};
+
+export default VideoIdDropdown;
+```
+
+Now when the component renders, the API call will be made and the response will be logged in the browser console. We can however, use the response to re-render the component, and show the videoIds as options in the `select`. We will use the component's `state` to do this, as changes to the state will schedule a render of the component.
+
+```js
+// src/components/VideoIdDropdown.jsx
+
+class VideoIdDropdown extends Component {
+  constructor (props, context) {
+    super(props, context);
+
+    this.state = {
+      videoIds: []
+    }
+  }
+
+  componentDidMount () {
+    this.fetchVideoList();
+  }
+
+  fetchVideoList () {
+    const defaultAccountId = '6027103981001';
+    // CMS API
+    const cmsBaseUrl = 'https://cms.api.brightcove.com/v1';
+    const getVideosEndpoint = `/accounts/${defaultAccountId}/videos`;
+
+    makeApiCall(cmsBaseUrl + getVideosEndpoint, 'GET')
+      .then((videos) => {
+        // This will schedule an update to the component's state
+        // which will cause a re-render
+        this.setState({
+          videoIds: videos.map(v => v.id)
+        });
+      });
+  }
+
+  renderOptions () {
+    const { videoIds } = this.state;
+
+    return videoIds.map((videoId, i) => (
+      <option value={videoId} key={`videoId-${i}`}>
+        {videoId}
+      </option>
+    ));
+  }
+
+  render () {
+    return (
+      <div>
+        <select>
+          <option>Select VideoId</option>
+          {this.renderOptions()}
+        </select>
+      </div>
+    );
+  }
+};
+
+export default VideoIdDropdown;
+```
+
+If we run `npm start`, we can see our `select` now has options for each of the videoIds in the account. The whole file for this code can be seen in:
+
+https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
+
 
 ## Load a Video into a Player
 
@@ -118,6 +283,7 @@ makeApiCall(cmsBaseUrl + getVideosEndpoint, 'GET')
 - [ES6 class][es6]
 - [JSX Documentation][jsx]
 - [CMS API Reference][cms-api-ref]
+- [VideoIdDropdown Full Solution][videoiddropdown-solution]
 
 [oauth]: ./oauth.md
 [oauth-proj-workflow]: ./oauth.md#project-workflow
@@ -134,3 +300,5 @@ makeApiCall(cmsBaseUrl + getVideosEndpoint, 'GET')
 [template-literal]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
 [oauthUtils]: ../src/oauthUtils.js
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[lifecycle]: https://reactjs.org/docs/react-component.html#the-component-lifecycle
+[videoiddropdown-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
