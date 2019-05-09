@@ -1,6 +1,6 @@
 # CMS API
 
-The Brightcove CMS API enables access and management of your media library. There are many operations that can be performed but we will focus on videos for this workshop.
+The Brightcove CMS API enables access and management of your media library in your Video Cloud Catalog. There are many operations that can be performed but we will focus on videos for this workshop.
 
 ## Usage
 
