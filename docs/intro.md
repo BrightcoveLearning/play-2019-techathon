@@ -20,7 +20,7 @@ src
 
 ### Assets
 
-We have provided a short, roughly 5s long video file for usage in a later section in which we will upload content to a Video Cloud Catalog.
+We have provided a short (roughly 5s long) video file for usage in a later section in which we will upload content to a Video Cloud Catalog.
 
 ### Public
 
@@ -28,7 +28,7 @@ This is where the base `index.html` file for the application is stored. When `np
 
 ### src
 
-This is where the source code for our application lives. There a few starter files provided which will be detailed in the sections below.
+This is where the source code for our application lives. There are a few starter files provided which will be detailed in the sections below.
 
 #### index.jsx
 
@@ -42,7 +42,7 @@ Learn more about React in our [React doc][react].
 
 #### oauthUtils.js
 
-This is a file with utility methods for calling Brightcove APIs. The method `makeApiCall` will the OAuth proxy we setup with the API endpoint we eventually want to hit, the method we want to use and a payload if one should be sent with the request. The method `makeS3Call` is provided to make a request to upload a video file directly to S3, which does not need to go through the OAuth proxy.
+This is a file with utility methods for calling Brightcove APIs. The method `makeApiCall` will call the OAuth proxy we setup with the API endpoint we eventually want to hit, the method we want to use and a payload if one should be sent with the request. The method `makeS3Call` is provided to make a request to upload a video file directly to S3, which does not need to go through the OAuth proxy.
 
 Learn more about using OAuth with the Brightcove APIs in the [OAuth doc][oauth].
 
