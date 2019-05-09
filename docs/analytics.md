@@ -6,11 +6,11 @@ The [Analytics API][api-overview] can be used to get a report on a specific vide
 
 The [API Reference][api-ref] details the operations that can be performed. You will need an [access token][oauth] to make calls to this API.
 
-The terms `dimensions`, `paramter` and `fields` are explained [here][fields-explain]. This document also explains how they can be combined.
+The terms `dimensions`, `parameter` and `fields` are explained [here][fields-explain]. This document also explains how they can be combined.
 
 ### Examples
 
-An example of getting an analytics report for a specific video is shown below. The `accounts` and `dimensions` query parameters are required. This assumes an access token has already been obtained.
+An example of getting an analytics report for a specific video is shown below. The `accounts` and `dimensions` query parameters are required. This assumes an [access token][oauth] has already been obtained.
 
 ```js
 import fetch from 'cross-fetch';
