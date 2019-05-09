@@ -1,3 +1,23 @@
+# Guide
+
+## Project Structure
+
+## Getting Started with Brightcove APIs
+
+## Get All Videos in an Account
+
+## Load a Video into a Player
+
+## Write a Player Plugin
+
+## Get Analytics for a Video
+
+## Upload a Local Video File
+
+## Check the Status of an Ingest Job
+
+
+## References
 - [OAuth][oauth]
 - [Brightcove Player][player]
 - [Analytics API][analytics]
