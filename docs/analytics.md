@@ -72,6 +72,7 @@ In this case, we are using a [dimension filter][where-filter] to restrict the re
 - [Glossary][glossary]
 - [All Time Video Views (Sample)][views-sample]
 
+[oauth]: ./oauth.md
 [api-overview]: https://support.brightcove.com/overview-analytics-api-v1
 [api-ref]: https://docs.brightcove.com/analytics-api/v1/doc/index.html
 [views-sample]: https://support.brightcove.com/brightcove-player-sample-all-time-video-views
