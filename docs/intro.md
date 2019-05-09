@@ -67,7 +67,7 @@ const cmsBaseUrl = 'https://cms.api.brightcove.com/v1';
 const getVideosEndpoint = '/accounts/{account_id}/videos';
 ```
 
-For the purposes of this project, we have setup a Video Cloud account with the [OAuth proxy registered][oauth-proj-workflow] to the account. We recommend you use this account for today, and setup your own OAuth proxy application [registered to a Video Cloud][oauth-normal-workflow] account you own.
+For the purposes of this project, we have set up a Video Cloud account with the [OAuth proxy registered][oauth-proj-workflow] to the account. We recommend you use the provided account for today. However, in a production setting and outside this workshop, you should set up your own OAuth proxy application [registered to a Video Cloud][oauth-normal-workflow] account you own.
 
 ```js
 const defaultAccountId = '6027103981001';
