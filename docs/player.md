@@ -6,7 +6,7 @@ Players can be [created and styled][create-player] in Video Cloud. In this proje
 
 ## Usage
 
-[React Player Loader][react-player-loader] provides a React component that will load a Brightcove Player for a specific account. At least the `accountId` and `onSuccess` callback must be provided as props. For example:
+[React Player Loader][react-player-loader] provides a React component that will load a Brightcove Player for a specific account. Minimally, the `accountId` and `onSuccess` callback must be provided as props. For example:
 
 ```js
 import document from 'global/document';
