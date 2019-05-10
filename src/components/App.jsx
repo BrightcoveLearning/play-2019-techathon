@@ -16,7 +16,8 @@ export default class App extends Component {
 
   handleVideoChange (video) {
     this.setState({ selectedVideo: video });
-  };
+  }
+
   render () {
     return (
       <div className='App'>

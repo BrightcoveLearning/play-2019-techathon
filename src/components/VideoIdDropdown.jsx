@@ -11,7 +11,7 @@ class VideoIdDropdown extends Component {
     super(props, context);
     this.state = {
       videoIds: []
-    }
+    };
     this.fetchVideoList = this.fetchVideoList.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -29,8 +29,9 @@ class VideoIdDropdown extends Component {
   }
 
   handleChange (event) {
-    this.props.onHandleVideoChange(event.target.value);
-  };
+    this.props.onHandleVideoChange(event.target.value || null);
+  }
+
   renderOptions () {
     const { videoIds } = this.state;
 
@@ -40,12 +41,13 @@ class VideoIdDropdown extends Component {
       </option>
     ));
   }
+
   render () {
     return (
       <div>
         <p>VideoIdDropdown</p>
         <select onChange={this.handleChange}>
-          <option>SELECT VIDEO</option>
+          <option value="">SELECT VIDEO</option>
           {this.renderOptions()}
         </select>
       </div>
