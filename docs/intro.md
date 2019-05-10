@@ -252,12 +252,12 @@ class VideoIdDropdown extends Component {
       </div>
     );
   }
-};
+}
 
 export default VideoIdDropdown;
 ```
 
-If we run `npm start`, we can see our `select` now has options for each of the videoIds in the account. The whole file for this code can be seen in:
+If we run `npm start`, we can see our `select` now has `<option>` tags for each of the videoIds in the account. The whole file for this code can be seen in:
 
 https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
 
@@ -633,20 +633,84 @@ export default class App extends Component {
       </div>
     );
   }
-};
+}
 ```
 
 You can take a look at the full solution below, where we styled the response into a table:
 
 https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/AnalyticsFetcher.jsx
 
-## Upload a Local Video File
-
 ## EXTRA CREDIT: Upload a Local Video File
 
 If you've gotten this far, congratulations! You've completed the main project. From here on, everything is extra credit and will take a bit longer than the sections you completed above.
 
+To be able to upload a video into a Video Cloud Catalog, you will need to use [a combination of the Dynamic Delivery API and CMS API][dd]. This section will go over the API steps to request an ingest of a local video file.
 
+### API Calls
+
+Before anything else, we have to make sure that the Video Cloud Catalog has a video object created that will contain the content we ingest. The way to do this is to use the [CMS API][cms-create-video] Create Video operation. Note that a video `name` is required.
+
+```js
+let videoId;
+
+const createVideo = function(name) {
+  const defaultAccountId = '6027103981001';
+  const apiCall = `https://cms.api.brightcove.com/v1/accounts/${defaultAccountId}/videos`;
+  const method = 'POST';
+  const options = {
+    name
+  };
+
+  return makeApiCall(apiCall, method, options)
+    .then((data) => {
+      console.log('video', data);
+      videoId = data.id;
+    });
+};
+```
+
+The response we get back includes the `videoId` that we'll use later to ingest an uploaded file. Now we can get to uploading a local video file!
+
+The [Dynamic Ingest API][https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosUploadUrlsSourceNameByAccountIdAndVideoIdGet] Get Temporary S3 URLs to Upload Videos operation will give us a URL to upload local content to and the URL to use to ingest that content later.
+
+```js
+const getSourceFileUploadLocation = function(videoId, videoName, videoFile) {
+  const defaultAccountId = '6027103981001';
+  const apiCall = `https://ingest.api.brightcove.com/v1/accounts/${defaultAccountId}/videos/${videoId}/upload-urls/${videoName}`;
+  const method = 'GET';
+
+  return makeApiCall(apiCall, method)
+    .then((data) => {
+      const signedUrl = data.signed_url;
+      const ingestUrl = data.api_request_url;
+      console.log('s3 upload url', signedUrl, 'url to ingest', ingestUrl);
+    });
+};
+```
+
+Now you can upload your content to the `signedUrl`. We have provided a utility method in `src/oauthUtils.js` called `makeS3Call` that will make the request without passing it through the OAuth proxy as that is not needed in this case. You can do a simple `PUT` request with the `body` option set to the video data.
+
+If the `PUT` request succeeded, then you can now use the [Dynamic Ingest API][https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosIngestRequestsByAccountIdAndVideoIdPost] Ingest Videos and Assets operation to ingest the uploaded video.
+
+```js
+const postVideoIngest = function(videoId, ingestUrl) {
+  const defaultAccountId = '6027103981001';
+  const apiCall = `https://ingest.api.brightcove.com/v1/accounts/${defaultAccountId}/videos/${videoId}/ingest-requests`;
+  const method = 'POST';
+  const options = {
+    master: {
+      url: ingestUrl
+    }
+  };
+
+  return makeApiCall(apiCall, method, options)
+    .then((data) => {
+      console.log('ingest job id', data.id);
+    });
+};
+```
+
+The response will include an Ingest Job `id`. This is what you will need to use if you complete the next section. Based on the calls above, you can build a `VideoUploader.jsx` component. You might want to look at [FileReader][filereader] to see how to read the video file data.
 
 ## EXTRA CREDIT: Check the Status of an Ingest Job
 
@@ -690,6 +754,9 @@ If you've gotten this far, congratulations! You've completed the main project. F
 [dimensions-fields-params]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters
 [analytics-glossary]: https://support.brightcove.com/analytics-api-glossary
 [analytics-where]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters#filterValues
+[cms-create-video]: https://docs.brightcove.com/cms-api/v1/doc/index.html#operation/CreateVideo
+
 [videoiddropdown-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
 [brightcoveplayer-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/BrightcovePlayer.jsx
 [analyticsfetcher-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/AnalyticsFetcher.jsx
+[filereader]: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
