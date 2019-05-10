@@ -642,7 +642,15 @@ https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/c
 
 ## Upload a Local Video File
 
-## Check the Status of an Ingest Job
+## EXTRA CREDIT: Upload a Local Video File
+
+If you've gotten this far, congratulations! You've completed the main project. From here on, everything is extra credit and will take a bit longer than the sections you completed above.
+
+
+
+## EXTRA CREDIT: Check the Status of an Ingest Job
+
+## EXTRA CREDIT: Redux Version
 
 ## References
 
