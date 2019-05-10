@@ -118,7 +118,7 @@ class VideoIdDropdown extends Component {
       </div>
     );
   }
-};
+}
 
 // we should export the class for use in other files
 export default VideoIdDropdown;
@@ -140,7 +140,7 @@ export default class App extends Component {
       </div>
     );
   }
-};
+}
 ```
 
 If you run `npm start` in the project it will start a local server that renders our application!
@@ -176,7 +176,7 @@ class VideoIdDropdown extends Component {
       </div>
     );
   }
-};
+}
 
 // we should export the class for use in other files
 export default VideoIdDropdown;
@@ -193,7 +193,7 @@ class VideoIdDropdown extends Component {
   }
 
   ...
-};
+}
 
 export default VideoIdDropdown;
 ```
@@ -298,6 +298,9 @@ class BrightcovePlayer extends Component {
           controls: true,
           fluid: true
         }}
+        embedOptions={{
+          unminified: true
+        }}
       />
     );
   }
@@ -340,7 +343,7 @@ export default class App extends Component {
       </div>
     );
   }
-};
+}
 ```
 
 ```js
@@ -402,7 +405,7 @@ export default class App extends Component {
       </div>
     );
   }
-};
+}
 ```
 
 That prop can be used to either re-render the `Player` (by passing `videoId` as a prop to the component) or we can use the [Player Catalog][player-catalog] to load the video into the `Player`.
@@ -419,14 +422,18 @@ class BrightcovePlayer extends Component {
   success = ({ ref }) => {
     // This gives us a reference to the successfully created player
     this.playerRef = ref;
-
-    // call load using the videoId provided via the prop `selectedVideo`
-    if (this.props.selectedVideo !== null) {
-      this.playerRef.catalog.load({
-        sources: [this.props.selectedVideo]
-      });
-    }
+    this.loadSelectedVideo();
   };
+
+  loadSelectedVideo() {
+    if (this.props.selectedVideo !== null) {
+      // call load using the videoId provided via the prop `selectedVideo`
+      this.playerRef.catalog.get({
+        type: 'video',
+        id: this.props.selectedVideo
+      }).then(this.playerRef.catalog.load);
+    }
+  }
 
   ...omitted code...
 }
@@ -451,9 +458,7 @@ class BrightcovePlayer extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    this.playerRef.catalog.getVideo(this.props.selectedVideo, (error, video) => {
-      this.playerRef.catalog.load(video);
-    });
+    this.loadSelectedVideo();
   }
 
   ...omitted code...
@@ -755,8 +760,9 @@ The response will include an Ingest Job `id`. This is what you will need to use 
 [analytics-glossary]: https://support.brightcove.com/analytics-api-glossary
 [analytics-where]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters#filterValues
 [cms-create-video]: https://docs.brightcove.com/cms-api/v1/doc/index.html#operation/CreateVideo
+[filereader]: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
 
 [videoiddropdown-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
 [brightcoveplayer-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/BrightcovePlayer.jsx
 [analyticsfetcher-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/AnalyticsFetcher.jsx
-[filereader]: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
+
