@@ -470,6 +470,176 @@ https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/c
 
 ## Get Analytics for a Video
 
+### API Call
+
+Now that we have a player with a video in our application, it would be interesting to look at the analytics for the video to see how well it is doing. We can do that by using the [Analytics API][analytics]. For the purposes of this project, let's get an [Analytics Report][analytics-report].
+
+The request for an Analytics Report requires `dimensions` and `accounts`. `Accounts` is required and is a comma-separated string of accountIds, as data from multiple accounts (that you have permission to view analytics for) can be queried.
+
+```js
+// Analytics API
+const analyticsReportEndpoint = 'https://analytics.api.brightcove.com/v1/data';
+const accountsQueryParam = `accounts=${defaultAccountId}`;
+```
+
+
+A `dimension` is the dimension by which you want to view the data. In our case, we want to see the analytics for a specific video, so we'll use the `video` dimension.
+
+```js
+const dimensionsQueryParam = '&dimensions=video';
+```
+
+We also have the option of choosing the fields that we want returned. These vary by the dimension that we choose, so we can use this [tool][dimensions-fields-params] to help us see what we have available when the `video` dimension is used.
+
+For our example, let's use the following fields:
+- video: The videoId
+- video_duration: The duration of the video content
+- video_engagement_1: The number of views recorded at the 1% point of the video.
+- video_engagement_100: The number of views recorded at the 100% point of the video.
+- video_engagement_25: The number of views recorded at the 25% point of the video.
+- video_engagement_50: The number of views recorded at the 50% point of the video.
+- video_engagement_75: The number of views recorded at the 75% point of the video.
+- video_impression: The number of times a video was loaded into a player and ready for interaction
+- video_percent_viewed: The sum of the percent of the video watched by each viewer.
+- video_seconds_viewed: The total number of seconds a video was viewed
+
+Explanations of other fields can be found in the [Analytics API Glossary][analytics-glossary]. The fields are a comma-separated list of field names.
+
+```js
+const fieldsQueryParam = '&fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed';
+```
+
+Right now, the query we've written will return analytics data for all the videos in the account. Since we're interested in the data for just one video, we should add a [where filter][analytics-where].
+
+```js
+const filterQueryParam = `&where=video==${videoId}`;
+```
+
+Now we just need to make the request using the `makeApiCall` utility from earlier:
+
+```js
+// Using ES6 imports
+import makeApiCall from '../oauthUtils.js';
+
+const defaultAccountId = '6027103981001';
+
+// Analytics API
+const analyticsReportEndpoint = 'https://analytics.api.brightcove.com/v1/data';
+const accountsQueryParam = `accounts=${defaultAccountId}`;
+const dimensionsQueryParam = '&dimensions=video';
+const fieldsQueryParam = '&fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed';
+const filterQueryParam = `&where=video==${videoId}`;
+const queryString = '?' + accountsQueryParam + dimensionsQueryParam + fieldsQueryParam + filterQueryParam;
+
+
+makeApiCall(analyticsReportEndpoint + queryString, 'GET')
+  .then((analyticData) => {
+    console.log('analytics response', analyticData);
+  });
+```
+
+### UI
+
+Let's show the response in the UI. Let's create a React component called `AnalyticsFetcher.jsx` that will show the response in a `<pre>` tag. Similar to the `VideoIdDropdown` component, we'll use `componentDidMount` to make the API call, and use `componentDidUpdate` to request data again when the `selectedVideo` is changed in the `App` component.
+
+```js
+// src/components/AnalyticsFetcher.jsx
+import React, { Component } from 'react';
+// Import our utlity methodA
+import makeApiCall from '../oauthUtils';
+// Apply styles if needed
+import './AnalyticsFetcher.css';
+
+class AnalyticsFetcher extends Component {
+  constructor (props, context) {
+    super(props, context);
+    this.state = {
+      analyticData:  null
+    };
+    this.getAnalyticsForVideo = this.getAnalyticsForVideo.bind(this);
+  }
+
+  componentDidMount () {
+    this.getAnalyticsForVideo(this.props.selectedVideo);
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.selectedVideo !== prevProps.selectedVideo ) {
+      this.getAnalyticsForVideo(this.props.selectedVideo);
+    }
+  }
+
+  getAnalyticsForVideo (video) {
+    const defaultAccountId = '6027103981001';
+
+    // Analytics API
+    const analyticsReportEndpoint = 'https://analytics.api.brightcove.com/v1/data';
+    const accountsQueryParam = `accounts=${defaultAccountId}`;
+    const dimensionsQueryParam = '&dimensions=video';
+    const fieldsQueryParam = '&fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed';
+    const filterQueryParam = `&where=video==${videoId}`;
+    const queryString = '?' + accountsQueryParam + dimensionsQueryParam + fieldsQueryParam + filterQueryParam;
+    const apiCall = analyticsReportEndpoint + queryString;
+    const method = 'GET';
+
+    makeApiCall(apiCall, method)
+      .then((response) => {
+        this.setState({
+          analyticData: response
+        })
+      })
+      .catch(error => console.error('Error:', error))
+  }
+
+  render () {
+    return (
+      <div>
+        <label>Video Analytics:</label>
+        {
+          this.state && this.state.analyticData &&
+          <pre>{ JSON.stringify(this.state.analyticData, null, 2) }</pre>
+        }
+      </div>
+    );
+  }
+}
+
+export default AnalyticsFetcher;
+```
+
+Our `App.jsx` can now be updated to include  the `AnalyticsFetcher` component, and pass the `selectedVideo` in as a prop:
+
+```js
+// src/components/App.jsx
+import React, { Component } from 'react';
+import './App.css';
+import VideoIdDropdown from './VideoIdDropdown';
+import BrightcovePlayer from './BrightcovePlayer';
+import AnalyticsFetcher from './AnalyticsFetcher';
+
+export default class App extends Component {
+  render () {
+    return (
+      <div className='App'>
+        <VideoIdDropdown
+          onHandleVideoChange={this.handleVideoChange}
+        />
+        <BrightcovePlayer
+          selectedVideo={this.state.selectedVideo}
+        />
+        <AnalyticsFetcher
+          selectedVideo={this.state.selectedVideo}
+        />
+      </div>
+    );
+  }
+};
+```
+
+You can take a look at the full solution below, where we styled the response into a table:
+
+https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/AnalyticsFetcher.jsx
+
 ## Upload a Local Video File
 
 ## Check the Status of an Ingest Job
@@ -488,6 +658,7 @@ https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/c
 - [React Player Loader][react-player-loader]
 - [VideoIdDropdown Full Solution][videoiddropdown-solution]
 - [BrightcovePlayer Full Solution][brightcoveplayer-solution]
+- [AnalyticsFetcher Full Solution][analyticsfetcher-solution]
 
 [oauth]: ./oauth.md
 [oauth-proj-workflow]: ./oauth.md#project-workflow
@@ -505,7 +676,12 @@ https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/c
 [oauthUtils]: ../src/oauthUtils.js
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [lifecycle]: https://reactjs.org/docs/react-component.html#the-component-lifecycle
-[videoiddropdown-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
 [react-player-loader]: https://support.brightcove.com/react-player-loader
 [player-catalog]: https://support.brightcove.com/player-catalog
+[analytics-report]: https://docs.brightcove.com/analytics-api/v1/doc/index.html#operation/GetAnalyticsReport
+[dimensions-fields-params]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters
+[analytics-glossary]: https://support.brightcove.com/analytics-api-glossary
+[analytics-where]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters#filterValues
+[videoiddropdown-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
 [brightcoveplayer-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/BrightcovePlayer.jsx
+[analyticsfetcher-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/AnalyticsFetcher.jsx
