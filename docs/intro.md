@@ -67,7 +67,7 @@ const cmsBaseUrl = 'https://cms.api.brightcove.com/v1';
 const getVideosEndpoint = '/accounts/{account_id}/videos';
 ```
 
-For the purposes of this project, we have setup a Video Cloud account with the [OAuth proxy registered][oauth-proj-workflow] to the account. We recommend you use this account for today, and setup your own OAuth proxy application [registered to a Video Cloud][oauth-normal-workflow] account you own.
+For the purposes of this project, we have set up a Video Cloud account with the [OAuth proxy registered][oauth-proj-workflow] to the account. We recommend you use the provided account for today. However, in a production setting and outside this workshop, you should set up your own OAuth proxy application [registered to a Video Cloud][oauth-normal-workflow] account you own.
 
 ```js
 const defaultAccountId = '6027103981001';
@@ -264,6 +264,208 @@ https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/c
 
 ## Load a Video into a Player
 
+Now that we have information about all the videos in an account, we could use that information to load the video into a Brightcove Player. Thankfully, we now provide a [React Player Loader][react-player-loader] component, which make it much easier to use Brightcove Players with React.
+
+Take a look at [this doc][player] to get a sense of how to use the [React Player Loader][react-player-loader].
+
+### Use in Project
+
+Let's create another React Component that will create a player based on the video that is selected in the `VideoIdDropdown` component.
+
+```js
+// src/components/BrightcovePlayer.jsx
+import React, { Component } from 'react';
+// You can style the Player component
+import './BrightcovePlayer.css';
+import Player from '@brightcove/react-player-loader';
+
+class BrightcovePlayer extends Component {
+  success = ({ ref }) => {
+    // This gives us a reference to the successfully created player
+    this.playerRef = ref;
+    console.log('player reference', this.playerRef);
+  };
+
+  render () {
+    // The onSucess callback is required
+    return (
+      <Player
+        attrs={{ id: 'videoPlayer' }}
+        accountId='6027103981001'
+        playerId='default'
+        onSuccess={this.success}
+        options={{
+          controls: true,
+          fluid: true
+        }}
+      />
+    );
+  }
+}
+
+export default BrightcovePlayer;
+```
+
+Now, we'll want to provide a way for the `BrightcovePlayer` component to know that the selected video changed. Let's update `VideoIdDropdown` to add a `onChange` method to the `<select>`. Since we want the whole application to know which video has been selected, let's have `App.jsx` keep track of that state.
+
+```js
+// src/components/App.jsx
+import React, { Component } from 'react';
+import './App.css';
+import VideoIdDropdown from './VideoIdDropdown';
+
+export default class App extends Component {
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      selectedVideo: null
+    };
+
+    this.handleVideoChange = this.handleVideoChange.bind(this);
+  }
+
+  handleVideoChange (video) {
+    this.setState({
+      selectedVideo: video
+    });
+  }
+
+  render () {
+    return (
+      <div className='App'>
+        <VideoIdDropdown
+          onHandleVideoChange={this.handleVideoChange}
+        />
+      </div>
+    );
+  }
+};
+```
+
+```js
+// src/components/VideoIdDropdown.jsx
+
+class VideoIdDropdown extends Component {
+  constructor (props, context) {
+    super(props, context);
+
+    this.state = {
+      videoIds: []
+    };
+
+    // Bind your event handlers to the class so you can
+    // modify state in the handler
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  ...omitted code...
+
+  handleChange (event) {
+    this.props.onHandleVideoChange(event.target.value);
+  };
+
+  render () {
+    return (
+      <div>
+        <select onChange={this.handleChange}>
+          <option>Select VideoId</option>
+          {this.renderOptions()}
+        </select>
+      </div>
+    );
+  }
+}
+```
+
+Now, the `BrightcovePlayer` component can take `selectedVideo` as a prop.
+
+```js
+// src/components/App.jsx
+import React, { Component } from 'react';
+import './App.css';
+import VideoIdDropdown from './VideoIdDropdown';
+import BrightcovePlayer from './BrightcovePlayer';
+
+export default class App extends Component {
+  ...omitted code...
+
+  render () {
+    return (
+      <div className='App'>
+        <VideoIdDropdown
+          onHandleVideoChange={this.handleVideoChange}
+        />
+        <BrightcovePlayer
+          selectedVideo={this.state.selectedVideo}
+        />
+      </div>
+    );
+  }
+};
+```
+
+That prop can be used to either re-render the `Player` (by passing `videoId` as a prop to the component) or we can use the [Player Catalog][player-catalog] to load the video into the `Player`.
+
+```js
+// src/components/BrightcovePlayer.jsx
+import React, { Component } from 'react';
+// You can style the Player component
+import './BrightcovePlayer.css';
+import Player from '@brightcove/react-player-loader';
+
+class BrightcovePlayer extends Component {
+  // This is provided to the `onSuccess` prop of `Player`
+  success = ({ ref }) => {
+    // This gives us a reference to the successfully created player
+    this.playerRef = ref;
+
+    // call load using the videoId provided via the prop `selectedVideo`
+    if (this.props.selectedVideo !== null) {
+      this.playerRef.catalog.load({
+        sources: [this.props.selectedVideo]
+      });
+    }
+  };
+
+  ...omitted code...
+}
+
+export default BrightcovePlayer;
+```
+
+The above will ensure that the selected video at the time of the `Player` component render will be loaded, but we need to make sure that when the selectedVideo changes, a new `catalog.load()` call is made. We can do that using the `shouldComponentUpdate` and `componentDidUpdate` lifecycle methods:
+
+```js
+// src/components/BrightcovePlayer.jsx
+import React, { Component } from 'react';
+// You can style the Player component
+import './BrightcovePlayer.css';
+import Player from '@brightcove/react-player-loader';
+
+class BrightcovePlayer extends Component {
+  ...omitted code...
+
+  shouldComponentUpdate (nextProps) {
+    return this.props.selectedVideo !== nextProps.selectedVideo;
+  }
+
+  componentDidUpdate (prevProps) {
+    this.playerRef.catalog.getVideo(this.props.selectedVideo, (error, video) => {
+      this.playerRef.catalog.load(video);
+    });
+  }
+
+  ...omitted code...
+}
+
+export default BrightcovePlayer;
+```
+
+Now the `BrightcovePlayer` component will load the selected video when a user makes a new selection! The whole file for this code can be seen in:
+
+https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/BrightcovePlayer.jsx
+
 ## Write a Player Plugin
 
 ## Get Analytics for a Video
@@ -283,7 +485,9 @@ https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/c
 - [ES6 class][es6]
 - [JSX Documentation][jsx]
 - [CMS API Reference][cms-api-ref]
+- [React Player Loader][react-player-loader]
 - [VideoIdDropdown Full Solution][videoiddropdown-solution]
+- [BrightcovePlayer Full Solution][brightcoveplayer-solution]
 
 [oauth]: ./oauth.md
 [oauth-proj-workflow]: ./oauth.md#project-workflow
@@ -302,3 +506,6 @@ https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/c
 [promise]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [lifecycle]: https://reactjs.org/docs/react-component.html#the-component-lifecycle
 [videoiddropdown-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
+[react-player-loader]: https://support.brightcove.com/react-player-loader
+[player-catalog]: https://support.brightcove.com/player-catalog
+[brightcoveplayer-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/BrightcovePlayer.jsx
