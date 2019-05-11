@@ -689,7 +689,7 @@ const createVideo = function(name) {
 
 The response we get back includes the `videoId` that we'll use later to ingest an uploaded file. Now we can get to uploading a local video file!
 
-The [Dynamic Ingest API][https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosUploadUrlsSourceNameByAccountIdAndVideoIdGet] Get Temporary S3 URLs to Upload Videos operation will give us a URL to upload local content to and the URL to use to ingest that content later.
+The [Dynamic Ingest API Get Temporary S3 URLs to Upload Videos][get-s3-urls] operation will give us a URL to upload local content to and the URL to use to ingest that content later.
 
 ```js
 const getSourceFileUploadLocation = function(videoId, videoName, videoFile) {
@@ -708,7 +708,7 @@ const getSourceFileUploadLocation = function(videoId, videoName, videoFile) {
 
 Now you can upload your content to the `signedUrl`. We have provided a utility method in `src/oauthUtils.js` called `makeS3Call` that will make the request without passing it through the OAuth proxy as that is not needed in this case. You can do a simple `PUT` request with the `body` option set to the video data.
 
-If the `PUT` request succeeded, then you can now use the [Dynamic Ingest API][https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosIngestRequestsByAccountIdAndVideoIdPost] Ingest Videos and Assets operation to ingest the uploaded video.
+If the `PUT` request succeeded, then you can now use the [Dynamic Ingest API Ingest Videos and Assets][ingest-videos] operation to ingest the uploaded video.
 
 ```js
 const postVideoIngest = function(videoId, ingestUrl) {
@@ -732,7 +732,13 @@ The response will include an Ingest Job `id`. This is what you will need to use 
 
 ## EXTRA CREDIT: Check the Status of an Ingest Job
 
+It often takes a few minutes to ingest and transcode an asset that has been uploaded. You can keep track of an Ingest Job's status with the [CMS Status API][api-ref-ingest-job-status]. This request requires `accountId`, `videoId` and the `ingestJobId` from the previous steps.
+
+The response will include a `state` attribute. The value of `state` will be `'finished'` when the job is complete. As the job may take some time, this API will need to be polled until the `state === 'finished'`. Based on this information, you can build an `IngestJobStatus` component that polls the Status API to indicate when the uploaded video has been ingested.
+
 ## EXTRA CREDIT: Redux Version
+
+Thus far, we've been using React state alone to store the results of our API calls and state changes. However, you might want to try out using [Redux][redux] to store state and manage making API calls. Our [Redux][redux] doc gives you a few basics and links, but the rest is left as an exercise for the reader.
 
 ## References
 
@@ -742,6 +748,7 @@ The response will include an Ingest Job `id`. This is what you will need to use 
 - [CMS API][cms]
 - [Dynamic Delivery][dd]
 - [React][react]
+- [Redux][redux]
 - [ES6 class][es6]
 - [JSX Documentation][jsx]
 - [CMS API Reference][cms-api-ref]
@@ -749,6 +756,9 @@ The response will include an Ingest Job `id`. This is what you will need to use 
 - [VideoIdDropdown Full Solution][videoiddropdown-solution]
 - [BrightcovePlayer Full Solution][brightcoveplayer-solution]
 - [AnalyticsFetcher Full Solution][analyticsfetcher-solution]
+- [VideoUploader Full Solution][videouploader-solution]
+- [IngestJobStatus Full Solution][ingestjobstatus-solution]
+- [Redux Full Solution][redux-solution]
 
 [oauth]: ./oauth.md
 [oauth-proj-workflow]: ./oauth.md#project-workflow
@@ -758,6 +768,7 @@ The response will include an Ingest Job `id`. This is what you will need to use 
 [cms]: ./cms.md
 [dd]: ./dynamicDelivery.md
 [react]: ./react.md
+[redux]: ./redux.md
 [es6]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
 [jsx]: https://reactjs.org/docs/introducing-jsx.html
 [cms-api-ref]: https://docs.brightcove.com/cms-api/v1/doc/index.html
@@ -774,8 +785,14 @@ The response will include an Ingest Job `id`. This is what you will need to use 
 [analytics-where]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters#filterValues
 [cms-create-video]: https://docs.brightcove.com/cms-api/v1/doc/index.html#operation/CreateVideo
 [filereader]: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
+[dd-ingest-status]: https://support.brightcove.com/overview-dynamic-ingest-api-dynamic-delivery#notifications
+[api-ref-ingest-job-status]: https://docs.brightcove.com/cms-api/v1/doc/index.html#operation/GetStatusOfIngestJob
+[ingest-videos]: https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosIngestRequestsByAccountIdAndVideoIdPost
+[get-s3-urls]: https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosUploadUrlsSourceNameByAccountIdAndVideoIdGet 
 
 [videoiddropdown-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
 [brightcoveplayer-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/BrightcovePlayer.jsx
 [analyticsfetcher-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/AnalyticsFetcher.jsx
-
+[videouploader-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoUploader.jsx
+[ingestjobstatus-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/IngestJobStatus.jsx
+[redux-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/tree/redux-solution
