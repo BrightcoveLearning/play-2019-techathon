@@ -676,7 +676,7 @@ const createVideo = function(name) {
 
 The response we get back includes the `videoId` that we'll use later to ingest an uploaded file. Now we can get to uploading a local video file!
 
-The [Dynamic Ingest API][https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosUploadUrlsSourceNameByAccountIdAndVideoIdGet] Get Temporary S3 URLs to Upload Videos operation will give us a URL to upload local content to and the URL to use to ingest that content later.
+The [Dynamic Ingest API Get Temporary S3 URLs to Upload Videos][get-s3-urls] operation will give us a URL to upload local content to and the URL to use to ingest that content later.
 
 ```js
 const getSourceFileUploadLocation = function(videoId, videoName, videoFile) {
@@ -695,7 +695,7 @@ const getSourceFileUploadLocation = function(videoId, videoName, videoFile) {
 
 Now you can upload your content to the `signedUrl`. We have provided a utility method in `src/oauthUtils.js` called `makeS3Call` that will make the request without passing it through the OAuth proxy as that is not needed in this case. You can do a simple `PUT` request with the `body` option set to the video data.
 
-If the `PUT` request succeeded, then you can now use the [Dynamic Ingest API][https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosIngestRequestsByAccountIdAndVideoIdPost] Ingest Videos and Assets operation to ingest the uploaded video.
+If the `PUT` request succeeded, then you can now use the [Dynamic Ingest API Ingest Videos and Assets][ingest-videos] operation to ingest the uploaded video.
 
 ```js
 const postVideoIngest = function(videoId, ingestUrl) {
@@ -774,6 +774,8 @@ Thus far, we've been using React state alone to store the results of our API cal
 [filereader]: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
 [dd-ingest-status]: https://support.brightcove.com/overview-dynamic-ingest-api-dynamic-delivery#notifications
 [api-ref-ingest-job-status]: https://docs.brightcove.com/cms-api/v1/doc/index.html#operation/GetStatusOfIngestJob
+[ingest-videos]: https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosIngestRequestsByAccountIdAndVideoIdPost
+[get-s3-urls]: https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosUploadUrlsSourceNameByAccountIdAndVideoIdGet 
 
 [videoiddropdown-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
 [brightcoveplayer-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/BrightcovePlayer.jsx
