@@ -204,8 +204,8 @@ Now when the component renders, the API call will be made and the response will 
 // src/components/VideoIdDropdown.jsx
 
 class VideoIdDropdown extends Component {
-  constructor (props, context) {
-    super(props, context);
+  constructor (props) {
+    super(props);
 
     this.state = {
       videoIds: []
@@ -280,11 +280,24 @@ import './BrightcovePlayer.css';
 import Player from '@brightcove/react-player-loader';
 
 class BrightcovePlayer extends Component {
-  success = ({ ref }) => {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      playerRef: null
+    };
+
+    this.success = this.success.bind(this);
+  }
+
+  success({ref}) {
     // This gives us a reference to the successfully created player
-    this.playerRef = ref;
-    console.log('player reference', this.playerRef);
-  };
+    this.setState({
+      playerRef: ref
+    });
+
+    console.log('player reference', this.state.playerRef);
+  }
 
   render () {
     // The onSucess callback is required
@@ -350,8 +363,8 @@ export default class App extends Component {
 // src/components/VideoIdDropdown.jsx
 
 class VideoIdDropdown extends Component {
-  constructor (props, context) {
-    super(props, context);
+  constructor (props) {
+    super(props);
 
     this.state = {
       videoIds: []
@@ -556,8 +569,8 @@ import makeApiCall from '../oauthUtils';
 import './AnalyticsFetcher.css';
 
 class AnalyticsFetcher extends Component {
-  constructor (props, context) {
-    super(props, context);
+  constructor (props) {
+    super(props);
     this.state = {
       analyticData:  null
     };
