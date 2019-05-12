@@ -18,15 +18,15 @@ class BrightcovePlayer extends Component {
     this.setState({
       playerRef: ref
     });
-    this.loadSelectedVideo();
+    this.loadSelectedVideo(ref);
   }
 
-  loadSelectedVideo () {
+  loadSelectedVideo (playerRef) {
     if (this.props.selectedVideo !== null) {
-      this.playerRef.catalog.get({
+      playerRef.catalog.get({
         type: 'video',
         id: this.props.selectedVideo
-      }).then(this.playerRef.catalog.load);
+      }).then(playerRef.catalog.load);
     }
   }
 
@@ -35,7 +35,7 @@ class BrightcovePlayer extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    this.loadSelectedVideo();
+    this.loadSelectedVideo(this.state.playerRef);
   }
 
   render () {
