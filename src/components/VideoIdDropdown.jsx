@@ -51,7 +51,7 @@ class VideoIdDropdown extends Component {
       <div>
         <p>VideoIdDropdown</p>
         <select onChange={this.handleVideoChange}>
-          <option>SELECT VIDEO</option>
+          <option value=''>SELECT VIDEO</option>
           {this.renderOptions()}
         </select>
       </div>
