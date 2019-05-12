@@ -280,7 +280,7 @@ import './BrightcovePlayer.css';
 import Player from '@brightcove/react-player-loader';
 
 class BrightcovePlayer extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
 
     this.state = {
@@ -290,7 +290,7 @@ class BrightcovePlayer extends Component {
     this.success = this.success.bind(this);
   }
 
-  success({ref}) {
+  success ({ref}) {
     // This gives us a reference to the successfully created player
     this.setState({
       playerRef: ref
@@ -431,20 +431,24 @@ import './BrightcovePlayer.css';
 import Player from '@brightcove/react-player-loader';
 
 class BrightcovePlayer extends Component {
-  // This is provided to the `onSuccess` prop of `Player`
-  success = ({ ref }) => {
-    // This gives us a reference to the successfully created player
-    this.playerRef = ref;
-    this.loadSelectedVideo();
-  };
+  ...omitted code...
 
-  loadSelectedVideo() {
+  // This is provided to the `onSuccess` prop of `Player`
+  success ({ref}) {
+    // This gives us a reference to the successfully created player
+    this.setState({
+      playerRef: ref
+    });
+    this.loadSelectedVideo(ref);
+  }
+
+  loadSelectedVideo (playerRef) {
     if (this.props.selectedVideo !== null) {
       // call load using the videoId provided via the prop `selectedVideo`
-      this.playerRef.catalog.get({
+      playerRef.catalog.get({
         type: 'video',
         id: this.props.selectedVideo
-      }).then(this.playerRef.catalog.load);
+      }).then(playerRef.catalog.load);
     }
   }
 
@@ -471,7 +475,7 @@ class BrightcovePlayer extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    this.loadSelectedVideo();
+    this.loadSelectedVideo(this.state.playerRef);
   }
 
   ...omitted code...
@@ -788,7 +792,7 @@ Thus far, we've been using React state alone to store the results of our API cal
 [dd-ingest-status]: https://support.brightcove.com/overview-dynamic-ingest-api-dynamic-delivery#notifications
 [api-ref-ingest-job-status]: https://docs.brightcove.com/cms-api/v1/doc/index.html#operation/GetStatusOfIngestJob
 [ingest-videos]: https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosIngestRequestsByAccountIdAndVideoIdPost
-[get-s3-urls]: https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosUploadUrlsSourceNameByAccountIdAndVideoIdGet 
+[get-s3-urls]: https://docs.brightcove.com/dynamic-ingest-api/v1/doc/index.html#operation/AccountsVideosUploadUrlsSourceNameByAccountIdAndVideoIdGet
 
 [videoiddropdown-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoIdDropdown.jsx
 [brightcoveplayer-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/BrightcovePlayer.jsx
