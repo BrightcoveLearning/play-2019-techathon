@@ -12,8 +12,8 @@ import {
 import './VideoIdDropdown.css';
 
 class VideoIdDropdown extends Component {
-  constructor (props, context) {
-    super(props, context);
+  constructor (props) {
+    super(props);
 
     this.getVideoList = this.getVideoList.bind(this);
     this.handleVideoChange = this.handleVideoChange.bind(this);

@@ -4,8 +4,20 @@ import { connect } from 'react-redux';
 import Player from '@brightcove/react-player-loader';
 
 class BrightcovePlayer extends Component {
-  success = ({ ref }) => {
-    this.playerRef = ref;
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      playerRef: null
+    };
+
+    this.success = this.success.bind(this);
+  }
+
+  success ({ ref }) {
+    this.setState({
+      playerRef: ref
+    });
     this.loadSelectedVideo();
   }
 
