@@ -4,8 +4,8 @@ import './VideoUploader.css';
 import IngestJobStatus from './IngestJobStatus';
 
 class VideoUploader extends Component {
-  constructor (props, context) {
-    super(props, context);
+  constructor (props) {
+    super(props);
 
     this.handleFileChange = this.handleFileChange.bind(this);
     this.submitVideoForUpload = this.submitVideoForUpload.bind(this);

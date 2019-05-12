@@ -4,8 +4,8 @@ import makeApiCall from '../oauthUtils';
 import './IngestJobStatus.css';
 
 class IngestJobStatus extends Component {
-  constructor (props, context) {
-    super(props, context);
+  constructor (props) {
+    super(props);
 
     this.checkStatus = this.checkStatus.bind(this);
     this.checkStatusInterval = null;

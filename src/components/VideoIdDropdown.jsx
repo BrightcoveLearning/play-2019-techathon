@@ -7,8 +7,8 @@ import makeApiCall from '../oauthUtils';
 import './VideoIdDropdown.css';
 
 class VideoIdDropdown extends Component {
-  constructor (props, context) {
-    super(props, context);
+  constructor (props) {
+    super(props);
     this.state = {
       videoIds: []
     };

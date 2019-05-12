@@ -3,8 +3,8 @@ import makeApiCall from '../oauthUtils';
 import './AnalyticsFetcher.css';
 
 class AnalyticsFetcher extends Component {
-  constructor (props, context) {
-    super(props, context);
+  constructor (props) {
+    super(props);
     this.state = {
       analyticData:  null
     };

@@ -3,17 +3,29 @@ import './BrightcovePlayer.css';
 import Player from '@brightcove/react-player-loader';
 
 class BrightcovePlayer extends Component {
-  success = ({ ref }) => {
-    this.playerRef = ref;
-    this.loadSelectedVideo();
-  };
+  constructor (props) {
+    super(props);
 
-  loadSelectedVideo() {
+    this.state = {
+      playerRef: null
+    };
+
+    this.success = this.success.bind(this);
+  }
+
+  success ({ ref }) {
+    this.setState({
+      playerRef: ref
+    });
+    this.loadSelectedVideo(ref);
+  }
+
+  loadSelectedVideo (playerRef) {
     if (this.props.selectedVideo !== null) {
-      this.playerRef.catalog.get({
+      playerRef.catalog.get({
         type: 'video',
         id: this.props.selectedVideo
-      }).then(this.playerRef.catalog.load);
+      }).then(playerRef.catalog.load);
     }
   }
 
@@ -22,7 +34,7 @@ class BrightcovePlayer extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    this.loadSelectedVideo();
+    this.loadSelectedVideo(this.state.playerRef);
   }
 
   render () {
