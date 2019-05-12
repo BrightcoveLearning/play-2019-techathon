@@ -77,6 +77,7 @@ curl -X POST \
 ## References
 
 - [OAuth API][oauth-api]
+- [OAuth API Reference][api-ref]
 - [Client Credential Flow][cred-flow]
 - [Getting Access Tokens][get-access-token]
 - [Managing API Authentication Credentials][client-reg]
@@ -85,6 +86,7 @@ curl -X POST \
 - [OAuth API Sample: Get an Access Token][oauth-sample]
 
 [oauth-api]: https://support.brightcove.com/overview-oauth-api-v4
+[api-ref]: https://docs.brightcove.com/oauth-api/v4/doc/index.html
 [cred-flow]: https://support.brightcove.com/overview-oauth-api-v4#Client_credential_flow
 [get-access-token]: https://support.brightcove.com/getting-access-tokens
 [client-reg]: https://support.brightcove.com/managing-api-authentication-credentials

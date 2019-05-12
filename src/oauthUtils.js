@@ -15,15 +15,13 @@ export default function makeApiCall (url, method, apiPayload) {
     }
   };
 
-  return fetch(oAuthProxyUrl, options).then(
-    response => response.json(),
+  return fetch(oAuthProxyUrl, options)
+    .then(
+      response => response.json(),
 
-    // Do not use catch, because that will also catch
-    // any errors in the dispatch and resulting render,
-    // causing a loop of 'Unexpected batch number' errors.
-    // https://github.com/facebook/react/issues/6895
-    error => console.error('ERROR', error),
-  );
+
+      error => console.error('ERROR', error)
+    );
 };
 
 export function makeS3Call (signedUrl, options) {
