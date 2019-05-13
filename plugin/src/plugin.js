@@ -4,11 +4,6 @@ import SecondsViewedComponent from './secondsViewedComponent';
 
 const Plugin = videojs.getPlugin('plugin');
 
-// Default options for the plugin.
-const defaults = {
-  videoSecondsViewed: 0
-};
-
 /**
  * An advanced Video.js plugin. For more information on the API
  *
@@ -31,9 +26,7 @@ class TechAThonProjPluginSolution extends Plugin {
   constructor (player, options) {
     // the parent class will add player under this.player
     super(player);
-
-    this.options = videojs.mergeOptions(defaults, options);
-    this.secondsViewedComponent = new SecondsViewedComponent(player, this.options);
+    this.secondsViewedComponent = new SecondsViewedComponent(player, options);
 
     // listens to state changes on plugin
     this.on('statechanged', function (e) {
@@ -45,7 +38,7 @@ class TechAThonProjPluginSolution extends Plugin {
     // Adds component to control bar
     this.player.controlBar.addChild(
       this.secondsViewedComponent,
-      { },
+      {},
       this.player.controlBar.children().length - 2
     );
 

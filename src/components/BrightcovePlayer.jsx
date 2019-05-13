@@ -29,9 +29,8 @@ class BrightcovePlayer extends Component {
         id: selectedVideo
       }).then(playerRef.catalog.load);
 
-      playerRef.techAThonProjPluginSolution().setState({
-        videoSecondsViewed
-      });
+      playerRef.techAThonProjPluginSolution()
+        .setState({ videoSecondsViewed });
     }
   }
 
@@ -45,18 +44,9 @@ class BrightcovePlayer extends Component {
   }
 
   render () {
-    const options = {
-      controls: true,
-      fluid: true
-    };
     let playerId = 'default';
 
-    if (this.props.videoSecondsViewed) {
-      options.plugins = {
-        techAThonProjPluginSolution: {
-          videoSecondsViewed: this.props.videoSecondsViewed
-        }
-      };
+    if (this.props.videoSecondsViewed !== undefined) {
       playerId = 'mkvkPawzDS';
     }
 
@@ -66,7 +56,10 @@ class BrightcovePlayer extends Component {
         accountId='6027103981001'
         playerId={playerId}
         onSuccess={this.success}
-        options={options}
+        options={{
+          controls: true,
+          fluid: true
+        }}
         embedOptions={{
           unminified: true
         }}
