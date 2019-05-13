@@ -33,13 +33,19 @@ class TechAThonProjPluginSolution extends Plugin {
     super(player);
 
     this.options = videojs.mergeOptions(defaults, options);
+    this.secondsViewedComponent = new SecondsViewedComponent(player, this.options);
 
-    const secondsViewedComponent = new SecondsViewedComponent(player, this.options);
+    // listens to state changes on plugin
+    this.on('statechanged', function (e) {
+      if (e.changes && e.changes.videoSecondsViewed) {
+        this.secondsViewedComponent.updateText(e.changes.videoSecondsViewed.to);
+      }
+    });
 
     // Adds component to control bar
     this.player.controlBar.addChild(
-      secondsViewedComponent,
-      { videoSecondsViewed: this.options.videoSecondsViewed },
+      this.secondsViewedComponent,
+      { },
       this.player.controlBar.children().length - 2
     );
 
@@ -54,6 +60,10 @@ TechAThonProjPluginSolution.defaultState = {};
 
 // Include the version number.
 TechAThonProjPluginSolution.VERSION = VERSION;
+
+TechAThonProjPluginSolution.defaultState = {
+  videoSecondsViewed: 0
+};
 
 // Register the plugin with video.js.
 videojs.registerPlugin('techAThonProjPluginSolution', TechAThonProjPluginSolution);

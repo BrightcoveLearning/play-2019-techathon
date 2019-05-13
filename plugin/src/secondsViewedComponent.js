@@ -4,10 +4,14 @@ const Component = videojs.getComponent('Component');
 
 class SecondsViewedComponent extends Component {
   constructor (player, options) {
+    options = videojs.mergeOptions(options, {
+      name: 'SecondsViewedComponent'
+    });
+
     // the parent class will add player under this.player
     super(player, options);
 
-    if (options.videoSecondsViewed) {
+    if (options.videoSecondsViewed !== undefined) {
       this.updateText(options.videoSecondsViewed);
     }
   }
