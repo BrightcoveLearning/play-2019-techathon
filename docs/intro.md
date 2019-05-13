@@ -591,7 +591,7 @@ class AnalyticsFetcher extends Component {
     }
   }
 
-  getAnalyticsForVideo (video) {
+  getAnalyticsForVideo (videoId) {
     const defaultAccountId = '6027103981001';
 
     // Analytics API
