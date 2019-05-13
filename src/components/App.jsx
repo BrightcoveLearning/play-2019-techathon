@@ -8,22 +8,46 @@ import VideoUploader from './VideoUploader';
 export default class App extends Component {
   constructor (props) {
     super(props);
-    this.handleVideoChange = this.handleVideoChange.bind(this);
+
     this.state = {
-      selectedVideo: null
+      selectedVideo: null,
+      videoSecondsViewed: 0
     };
+
+    this.handleVideoChange = this.handleVideoChange.bind(this);
+    this.onReceiveAnalytics = this.onReceiveAnalytics.bind(this);
   }
 
   handleVideoChange (video) {
-    this.setState({ selectedVideo: video });
+    this.setState({
+      selectedVideo: video
+    });
+  }
+
+  onReceiveAnalytics (data) {
+    if (data.items.length === 0) {
+      return;
+    }
+
+    const item = data.items[0];
+
+    this.setState({
+      videoSecondsViewed: item.video_seconds_viewed
+    });
   }
 
   render () {
     return (
       <div className='App'>
         <VideoIdDropdown onHandleVideoChange={this.handleVideoChange} />
-        <BrightcovePlayer selectedVideo={this.state.selectedVideo} />
-        <AnalyticsFetcher selectedVideo={this.state.selectedVideo} />
+        <BrightcovePlayer
+          selectedVideo={this.state.selectedVideo}
+          videoSecondsViewed={this.state.videoSecondsViewed}
+        />
+        <AnalyticsFetcher
+          selectedVideo={this.state.selectedVideo}
+          onReceiveData={this.onReceiveAnalytics}
+        />
         <VideoUploader />
       </div>
     );
