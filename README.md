@@ -26,4 +26,4 @@ The build is minified and the filenames include the hashes.<br>
 
 ## The Project Documentation
 
-To get started on the TechAThon project, click [here](./docs/intro.md).
+To get started on the TechAThon project, click [here](./docs/guide.md).
