@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './BrightcovePlayer.css';
 import Player from '@brightcove/react-player-loader';
 
@@ -54,6 +55,10 @@ class BrightcovePlayer extends Component {
       />
     );
   }
+}
+
+BrightcovePlayer.propTypes = {
+  selectedVideo: PropTypes.string
 }
 
 export default BrightcovePlayer;

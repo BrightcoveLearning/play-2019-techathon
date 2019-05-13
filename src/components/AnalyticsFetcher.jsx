@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import makeApiCall from '../oauthUtils';
 import './AnalyticsFetcher.css';
 
@@ -115,6 +116,10 @@ class AnalyticsFetcher extends Component {
       </div>
     );
   }
+}
+
+AnalyticsFetcher.propTypes = {
+  selectedVideo: PropTypes.string
 }
 
 export default AnalyticsFetcher;
