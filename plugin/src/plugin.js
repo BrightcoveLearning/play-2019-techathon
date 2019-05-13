@@ -49,14 +49,12 @@ class TechAThonProjPluginSolution extends Plugin {
 }
 
 // Define default values for the plugin's `state` object here.
-TechAThonProjPluginSolution.defaultState = {};
-
-// Include the version number.
-TechAThonProjPluginSolution.VERSION = VERSION;
-
 TechAThonProjPluginSolution.defaultState = {
   videoSecondsViewed: 0
 };
+
+// Include the version number.
+TechAThonProjPluginSolution.VERSION = VERSION;
 
 // Register the plugin with video.js.
 videojs.registerPlugin('techAThonProjPluginSolution', TechAThonProjPluginSolution);
