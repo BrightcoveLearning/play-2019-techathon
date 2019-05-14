@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './BrightcovePlayer.css';
 import { connect } from 'react-redux';
 import Player from '@brightcove/react-player-loader';
@@ -60,5 +61,9 @@ class BrightcovePlayer extends Component {
 const mapStateToProps = (state) => ({
   selectedVideo: state.base.selectedVideo
 });
+
+BrightcovePlayer.propTypes = {
+  selectedVideo: PropTypes.string
+};
 
 export default connect(mapStateToProps)(BrightcovePlayer);

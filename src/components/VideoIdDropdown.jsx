@@ -3,6 +3,7 @@
  * the videos in the store.
  */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   fetchVideoList,
@@ -63,8 +64,12 @@ class VideoIdDropdown extends Component {
  * see https://redux-docs.netlify.com/basics/usage-with-react#implementing-container-components
  */
 const mapStateToProps = (state) => ({
-  videoIds: state.base.videos.map(e => e.id),
-  selectedVideo: state.base.selectedVideo
+  videoIds: state.base.videos.map(e => e.id)
 });
+
+VideoIdDropdown.propTypes = {
+  videoIds: PropTypes.array,
+  dispatch: PropTypes.func
+};
 
 export default connect(mapStateToProps)(VideoIdDropdown);
