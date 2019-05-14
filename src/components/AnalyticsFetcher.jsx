@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import makeApiCall from '../oauthUtils';
 import './AnalyticsFetcher.css';
 
@@ -6,7 +7,7 @@ class AnalyticsFetcher extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      analyticData:  null
+      analyticData: null
     };
     this.getAnalyticsForVideo = this.getAnalyticsForVideo.bind(this);
   }
@@ -16,13 +17,17 @@ class AnalyticsFetcher extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.selectedVideo !== prevProps.selectedVideo ) {
+    if (this.props.selectedVideo !== prevProps.selectedVideo) {
       this.getAnalyticsForVideo(this.props.selectedVideo);
     }
   }
 
   getAnalyticsForVideo (video) {
-    const apiCall = `https://analytics.api.brightcove.com/v1/data?accounts=6027103981001&dimensions=video&fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed&video=${video}`;
+    const apiCall = 'https://analytics.api.brightcove.com/v1/data?' +
+      'accounts=6027103981001' +
+      '&dimensions=video' +
+      '&fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed' +
+      `&where=video==${video}`;
     const method = 'GET';
     makeApiCall(apiCall, method)
       .then((response) => {
@@ -116,6 +121,10 @@ class AnalyticsFetcher extends Component {
       </div>
     );
   }
+}
+
+AnalyticsFetcher.propTypes = {
+  selectedVideo: PropTypes.string
 }
 
 export default AnalyticsFetcher;

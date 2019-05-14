@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import makeApiCall from '../oauthUtils';
 
 import './IngestJobStatus.css';
@@ -84,6 +85,12 @@ class IngestJobStatus extends Component {
       </div>
     );
   }
+}
+
+IngestJobStatus.propTypes = {
+  accountId: PropTypes.number,
+  videoId: PropTypes.string,
+  ingestJobId: PropTypes.string
 }
 
 export default IngestJobStatus;

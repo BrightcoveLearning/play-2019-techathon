@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import makeApiCall from '../oauthUtils';
 import './VideoIdDropdown.css';
+import PropTypes from 'prop-types';
 
 class VideoIdDropdown extends Component {
   constructor (props) {
@@ -47,11 +48,16 @@ class VideoIdDropdown extends Component {
       <div>
         <p>VideoIdDropdown</p>
         <select onChange={this.handleChange}>
-          <option value="">SELECT VIDEO</option>
+          <option value=''>SELECT VIDEO</option>
           {this.renderOptions()}
         </select>
       </div>
     );
   }
 }
+
+VideoIdDropdown.propTypes = {
+  onHandleVideoChange: PropTypes.func
+};
+
 export default VideoIdDropdown;
