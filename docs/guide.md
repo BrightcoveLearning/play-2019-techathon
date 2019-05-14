@@ -52,7 +52,7 @@ There is not much provided in App.test.jsx currently, however the project is set
 
 ## Getting Started with Brightcove APIs
 
-// TODO
+A few things that might be helpful when working with Brightcove APIs are the [documentation][documentation] and [the API References][api-refs]. Please also read the [OAuth doc][oauth] to understand how authentication ordinarily works and how it will work for just this project.
 
 ## Get All Videos in an Account
 
@@ -965,6 +965,8 @@ Thus far, we've been using React state alone to store the results of our API cal
 [redux]: ./redux.md
 [es6]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
 [jsx]: https://reactjs.org/docs/introducing-jsx.html
+[documentation]: https://support.brightcove.com/
+[api-refs]: https://docs.brightcove.com/index.html
 
 [cms-api-ref]: https://docs.brightcove.com/cms-api/v1/doc/index.html
 [get-videos]: https://docs.brightcove.com/cms-api/v1/doc/index.html#operation/GetVideos
