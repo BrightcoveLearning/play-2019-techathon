@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './AnalyticsFetcher.css';
 import { connect } from 'react-redux';
 
@@ -92,5 +93,9 @@ class AnalyticsFetcher extends Component {
 const mapStateToProps = (state) => ({
   analyticData: state.base.analyticData
 });
+
+AnalyticsFetcher.propTypes = {
+  analyticData: PropTypes.object
+};
 
 export default connect(mapStateToProps)(AnalyticsFetcher);

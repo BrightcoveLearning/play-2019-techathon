@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   createVideo
@@ -115,5 +116,10 @@ class VideoUploader extends Component {
 const mapStateToProps = (state) => ({
   accountId: state.base.accountId
 });
+
+VideoUploader.propTypes = {
+  dispatch: PropTypes.func,
+  accountId: PropTypes.number
+};
 
 export default connect(mapStateToProps)(VideoUploader);

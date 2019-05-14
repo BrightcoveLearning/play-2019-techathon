@@ -3,6 +3,7 @@
  * the videos in the store.
  */
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   fetchVideoList,
@@ -66,5 +67,10 @@ const mapStateToProps = (state) => ({
   videoIds: state.base.videos.map(e => e.id),
   selectedVideo: state.base.selectedVideo
 });
+
+VideoIdDropdown.propTypes = {
+  videoIds: PropTypes.array,
+  dispatch: PropTypes.func
+};
 
 export default connect(mapStateToProps)(VideoIdDropdown);

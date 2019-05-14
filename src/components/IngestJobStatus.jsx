@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   getIngestStatus
@@ -68,5 +69,12 @@ const mapStateToProps = (state) => ({
   accountId: state.base.accountId,
   videoId: state.currentRemoteUpload.videoId
 });
+
+IngestJobStatus.propTypes = {
+  accountId: PropTypes.number,
+  videoId: PropTypes.string,
+  dispatch: PropTypes.func,
+  ingestJob: PropTypes.object
+};
 
 export default connect(mapStateToProps)(IngestJobStatus);
