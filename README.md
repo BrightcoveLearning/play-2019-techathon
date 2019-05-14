@@ -1,6 +1,14 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Play 2019: Tech-a-Thon
+
+This project is a hands-on developer walkthrough aimed at getting familiar with Brightcove APIs and the Brightcove Player.
+
+## The Project Documentation
+
+To get started on the TechAThon project, click [here](./docs/guide.md).
 
 ## Available Scripts
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 In the project directory, you can run:
 
@@ -23,7 +31,3 @@ Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.<br>
-
-## The Project Documentation
-
-To get started on the TechAThon project, click [here](./docs/guide.md).
