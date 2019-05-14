@@ -6,7 +6,9 @@ You can create a [Video.js][videojs] Player Plugin to add custom functionality t
 
 In this project, you will be creating a very simple player plugin to show an analytics data field in the control bar. In order to do this, you will need to use the [plugin generator][generator] to bootstrap a plugin and [pass data to the plugin][pass-data] for use.
 
-Once your player plugin is written, we'll need to add it to a player and publish the player for the changes to take effect. You can take a look at how to [add a plugin in Video Cloud][plugin-deploy].
+## Normal Workflow
+
+Once your player plugin is written, you will need to add it to a player and publish the player for the changes to take effect. You can take a look at how to [add a plugin in Video Cloud][plugin-deploy].
 
 ## References
 - [Video.js][videojs]
