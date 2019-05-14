@@ -64,8 +64,7 @@ class VideoIdDropdown extends Component {
  * see https://redux-docs.netlify.com/basics/usage-with-react#implementing-container-components
  */
 const mapStateToProps = (state) => ({
-  videoIds: state.base.videos.map(e => e.id),
-  selectedVideo: state.base.selectedVideo
+  videoIds: state.base.videos.map(e => e.id)
 });
 
 VideoIdDropdown.propTypes = {
