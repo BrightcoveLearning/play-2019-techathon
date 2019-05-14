@@ -19,14 +19,14 @@ export const RECEIVE_INGEST_STATUS = 'RECEIVE_INGEST_STATUS';
 
 /** Action Creators */
 
-export function requestVideoList (accountId = '6027103981001') {
+export function requestVideoList (accountId = 6027103981001) {
   return {
     type: REQUEST_VIDEO_LIST,
     accountId
   };
 };
 
-export function receiveVideoList (accountId = '6027103981001', data) {
+export function receiveVideoList (accountId = 6027103981001, data) {
   return {
     type: RECEIVE_VIDEO_LIST,
     accountId,
@@ -49,7 +49,7 @@ export function updateVideoAnalytics (data) {
   };
 };
 
-export function requestVideoCreate (accountId = '6027103981001', videoName, fileSize, mimeType) {
+export function requestVideoCreate (accountId = 6027103981001, videoName, fileSize, mimeType) {
   return {
     type: REQUEST_VIDEO_CREATE,
     accountId,
