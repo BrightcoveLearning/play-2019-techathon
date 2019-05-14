@@ -667,11 +667,11 @@ Now we have a Brightcove Player that loads video content and the analytics repor
 
 ### Generator and Setup
 
-First, we'll need to use the [plugin generator][plugin-generator] to bootstrap a plugin. Let's create a directory for the plugin files: `src/plugin`. Make sure you enter this directory then follow the project instructions to run the generator. The generator will ask you a number of questions as it sets up the project. Here is a sample of how you can answer:
+First, we'll need to use the [plugin generator][plugin-generator] to bootstrap a plugin. Let's create a directory for the plugin files: `/plugin`. Make sure you enter this directory then follow the project instructions to run the generator. The generator will ask you a number of questions as it sets up the project. Here is a sample of how you can answer:
 
 ```
 ? Enter a package scope, if any, for npm (optional): <hit enter>
-? Enter the name of this plugin: tech-a-thon-proj-plugin-<your-team-name>
+? Enter the name of this plugin: techathon-proj-plugin-<your-team-name>
 ? Enter a description for your plugin: <A provided solution for the 2019 Play Tech-a-Thon project player plugin>
 ? Enter the author of this plugin: <your name>
 ? Choose a license for your plugin <MIT>
@@ -685,7 +685,7 @@ First, we'll need to use the [plugin generator][plugin-generator] to bootstrap a
 
 The generator will run `npm i` automatically so it may take a few minutes to set up. After that, you should be able to run `npm run build` to build the plugin files into a `dist` directory and `npm test` to run tests and linting in the project. You can also run `npm start` to get a test page that will load your player plugin into a plain Video.js player.
 
-The code for the plugin will be in `src/plugin.js` and it will have a `plugin.css` file for any plugin specific CSS styles. This is where we want to make our changes.
+The code for the plugin will be in `plugin/src/plugin.js` and it will have a `plugin.css` file for any plugin specific CSS styles. These two files are where we want to make our changes.
 
 ### Plugin Development
 
@@ -720,24 +720,23 @@ this.player.ready(() => {
 });
 ```
 
-Let's make our plugin take a `video_seconds_viewed` field and display it in a control bar button. We can do that by: taking the `videoSecondsViewed` value as a plugin option and extending `Component` to create a custom element to add as a child to the player's `controlBar`.
+Let's make our plugin take a `video_seconds_viewed` field and display it in the control bar. We can do that by: taking the `videoSecondsViewed` value as plugin state and extending `Component` to create a custom element to add as a child to the player's `controlBar`.
 
-Let's start by defining a default value for `videoSecondsViewed` and reading in that option.
+Let's start by defining a default value for `videoSecondsViewed` state.
 
 ```js
-// Default options for the plugin.
-const defaults = {
+// Define default values for the plugin's `state` object here.
+TechAThonProjPluginSolution.defaultState = {
   videoSecondsViewed: 0
 };
 ```
 
-Now when the plugin is constructed, the value of the `videoSecondsViewed` will be 0 until intialization when another value can be passed, by doing the following:
+Now when the plugin is constructed, the value of the `state.videoSecondsViewed` will be 0 until `setState` is called on the plugin with another value, by doing the following:
 
 ```js
 // This is outside the plugin
-player.techAThonProjPluginSolution({
-  videoSecondsViewed: 5
-});
+player.techAThonProjPluginSolution()
+  .setState({ videoSecondsViewed: 5 });
 ```
 
 Let's make another file `plugin/src/secondsViewedComponent.js`. This will extend the `Component` class and create a `<div>` to show the value of `videoSecondsViewed`. Check out the [Video.js docs about creating a component][create-component] for more information on how to do this.
@@ -777,13 +776,34 @@ You can create DOM element like `<div>` by implementing the `createEl` method an
   }
 ```
 
-This will create a `div` with the given classname and set the `textContent` or `innerText` to the empty string. Now, we need to actually display something inside the div. We can do that by passing the `videoSecondsViewed` option to a method `updateText` that will set the `textContent` or `innerText` with a utility method `videojs.dom.textContent`.
+This will create a `div` with the given classname and set the `textContent` or `innerText` to the empty string. Now, we need to actually display something inside the `div`. We can do that by passing the `videoSecondsViewed` value to a method `updateText` that will set the `textContent` or `innerText` with a utility method `videojs.dom.textContent`.
 
 ```js
 // plugin/src/secondsViewedComponent.js
   ...omitted code...
   updateText (secondsViewed) {
     return videojs.dom.textContent(this.el(), `viewed: ${secondsViewed}s`);
+  }
+```
+
+And now, we need to listen to state changes on the plugin and call `updateText` on the instance of `SecondsViewedComponent` in the class.
+
+```js
+// plugin/src/plugin.js
+  constructor (player, options) {
+    ...omitted code...
+
+    this.secondsViewedComponent = new SecondsViewedComponent(player, options);
+
+    // listens to state changes on plugin
+    this.on('statechanged', function (e) {
+      // see https://docs.videojs.com/module-stateful-statefulmixin#event:statechanged
+      if (e.changes && e.changes.videoSecondsViewed) {
+        this.secondsViewedComponent.updateText(e.changes.videoSecondsViewed.to);
+      }
+    });
+
+    ...omitted code...
   }
 ```
 
@@ -795,8 +815,8 @@ Now we need to add the `SecondsViewedComponent` as a child to the `controlBar` s
 
     // Adds component to control bar
     this.player.controlBar.addChild(
-      'SecondsViewedComponent',
-      { videoSecondsViewed: this.options.videoSecondsViewed },
+      this.secondsViewedComponent,
+      {},
       // adds component as second last child
       this.player.controlBar.children().length - 2
     );
@@ -813,11 +833,21 @@ The last thing to do is to apply some styles to the component now that we can se
     }
 ```
 
-Now we have a working plugin! You should be able to see this working in the Video.js sandbox when you run `npm start`. We should, however add our new plugin to our `BrightcovePlayer`.
+For now, we have a working plugin! You should be able to see this working in the Video.js sandbox when you run `npm start`. A full solution is linked below:
+
+https://github.com/BrightcoveLearning/play-2019-techathon/tree/react-state/plugin/src
 
 ### Add to Player
 
-// TODO
+To actually apply changes, we must call `playerRef.pluginName().setState` with the new `videoSecondsViewed` value. This can be done in our `BrightcovePlayer` component. Usually, you would [use Video Cloud to add a plugin and publish a player][deploy-player]. However, since we're using the provided account, a player with a solution plugin has been provided under the same account.
+
+playerId: `mkvkPawzDS`
+
+pluginName: `techAThonProjPluginSolution`
+
+The actual implementation of this is left as an exercise for the reader. However, the full solution is linked below:
+
+https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/BrightcovePlayer.jsx
 
 ## EXTRA CREDIT: Upload a Local Video File
 
@@ -918,6 +948,7 @@ Thus far, we've been using React state alone to store the results of our API cal
 - [VideoIdDropdown Full Solution][videoiddropdown-solution]
 - [BrightcovePlayer Full Solution][brightcoveplayer-solution]
 - [AnalyticsFetcher Full Solution][analyticsfetcher-solution]
+- [Player Plugin Full Solution][playerplugin-solution]
 - [VideoUploader Full Solution][videouploader-solution]
 - [IngestJobStatus Full Solution][ingestjobstatus-solution]
 - [Redux Full Solution][redux-solution]
@@ -948,6 +979,7 @@ Thus far, we've been using React state alone to store the results of our API cal
 [plugin-generator]: https://support.brightcove.com/quick-start-videojs-plugin-generator
 [create-component]: https://docs.videojs.com/tutorial-components.html#creating-a-component
 [postcss-nesting]: https://github.com/jonathantneal/postcss-nesting
+[deploy-player]: https://support.brightcove.com/step-step-plugin-development#bc-ipnav-5
 
 [analytics-report]: https://docs.brightcove.com/analytics-api/v1/doc/index.html#operation/GetAnalyticsReport
 [dimensions-fields-params]: https://support.brightcove.com/analytics-api-overview-dimensions-fields-and-parameters
@@ -967,3 +999,4 @@ Thus far, we've been using React state alone to store the results of our API cal
 [videouploader-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/VideoUploader.jsx
 [ingestjobstatus-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/blob/react-state/src/components/IngestJobStatus.jsx
 [redux-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/tree/redux-solution
+[playerplugin-solution]: https://github.com/BrightcoveLearning/play-2019-techathon/tree/react-state/plugin/src
