@@ -93,3 +93,5 @@ curl -X POST \
 [oauth-quick]: https://support.brightcove.com/quick-start-oauth
 [api-ops]: https://support.brightcove.com/api-operations-client-credentials-requests
 [oauth-sample]: https://support.brightcove.com/oauth-api-sample-get-access-token
+[mrss sample (original solutions.brightcove.com)]: https://support.brightcove.com/cms-api-sample-mrss-generator
+[mrss-sample (modified for test account)]: https://codepen.io/anon/pen/GarKKx
