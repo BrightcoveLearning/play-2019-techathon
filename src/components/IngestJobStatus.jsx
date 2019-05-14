@@ -89,8 +89,8 @@ class IngestJobStatus extends Component {
 
 IngestJobStatus.propTypes = {
   accountId: PropTypes.number,
-  videoId: PropTypes.number,
-  ingestJobId: PropTypes.number
+  videoId: PropTypes.string,
+  ingestJobId: PropTypes.string
 }
 
 export default IngestJobStatus;
