@@ -21,16 +21,22 @@ class BrightcovePlayer extends Component {
   }
 
   loadSelectedVideo (playerRef) {
-    if (this.props.selectedVideo !== null) {
+    const { selectedVideo, videoSecondsViewed } = this.props;
+
+    if (selectedVideo !== null) {
       playerRef.catalog.get({
         type: 'video',
-        id: this.props.selectedVideo
+        id: selectedVideo
       }).then(playerRef.catalog.load);
+
+      playerRef.techAThonProjPluginSolution()
+        .setState({ videoSecondsViewed });
     }
   }
 
   shouldComponentUpdate (nextProps) {
-    return this.props.selectedVideo !== nextProps.selectedVideo;
+    return this.props.selectedVideo !== nextProps.selectedVideo ||
+      this.props.videoSecondsViewed !== nextProps.videoSecondsViewed;
   }
 
   componentDidUpdate (prevProps) {
@@ -38,11 +44,17 @@ class BrightcovePlayer extends Component {
   }
 
   render () {
+    let playerId = 'default';
+
+    if (this.props.videoSecondsViewed !== undefined) {
+      playerId = 'mkvkPawzDS';
+    }
+
     return (
       <Player
         attrs={{ id: 'videoPlayer' }}
         accountId='6027103981001'
-        playerId='default'
+        playerId={playerId}
         onSuccess={this.success}
         options={{
           controls: true,

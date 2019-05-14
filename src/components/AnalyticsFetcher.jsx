@@ -26,7 +26,8 @@ class AnalyticsFetcher extends Component {
     const method = 'GET';
     makeApiCall(apiCall, method)
       .then((response) => {
-        this.setState({ analyticData: response })
+        this.setState({ analyticData: response });
+        this.props.onReceiveData(response);
       })
       .catch(error => console.error('Error:', error))
   }
