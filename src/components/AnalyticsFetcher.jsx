@@ -23,11 +23,11 @@ class AnalyticsFetcher extends Component {
   }
 
   getAnalyticsForVideo (video) {
-    const apiCall = `https://analytics.api.brightcove.com/v1/data?
-      accounts=6027103981001
-      &dimensions=video
-      &fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed
-      &where=video==${video}`;
+    const apiCall = 'https://analytics.api.brightcove.com/v1/data?' +
+      'accounts=6027103981001' +
+      '&dimensions=video' +
+      '&fields=video,video_duration,video_engagement_1,video_engagement_100,video_engagement_25,video_engagement_50,video_engagement_75,video_impression,video_percent_viewed,video_seconds_viewed' +
+      `&where=video==${video}`;
     const method = 'GET';
     makeApiCall(apiCall, method)
       .then((response) => {
