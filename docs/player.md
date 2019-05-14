@@ -40,6 +40,7 @@ There are also several methods of loading videos supported, including using the 
 - [Player Loader Parameters][loader-params]
 - [Player Catalog][player-catalog]
 - [Creating and Styling a Player][create-player]
+- [More Samples][player-loader-samples]
 
 [player-loader]: https://support.brightcove.com/brightcove-player-loader
 [react-player-loader]: https://support.brightcove.com/react-player-loader
@@ -47,3 +48,4 @@ There are also several methods of loading videos supported, including using the 
 [loader-params]: https://support.brightcove.com/brightcove-player-loader#Available_parameters
 [player-catalog]: https://support.brightcove.com/player-catalog
 [create-player]: https://support.brightcove.com/quick-start-creating-and-styling-player
+[player-loader-samples]: http://solutions.brightcove.com/poneill/demos/play-2019/
