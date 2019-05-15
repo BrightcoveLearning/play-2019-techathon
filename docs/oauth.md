@@ -84,6 +84,7 @@ curl -X POST \
 - [Quick Start: OAuth][oauth-quick]
 - [API Operations for Client Credentials Requests][api-ops]
 - [OAuth API Sample: Get an Access Token][oauth-sample]
+- [MRSS Sample][mrss sample]
 
 [oauth-api]: https://support.brightcove.com/overview-oauth-api-v4
 [api-ref]: https://docs.brightcove.com/oauth-api/v4/doc/index.html
@@ -93,5 +94,4 @@ curl -X POST \
 [oauth-quick]: https://support.brightcove.com/quick-start-oauth
 [api-ops]: https://support.brightcove.com/api-operations-client-credentials-requests
 [oauth-sample]: https://support.brightcove.com/oauth-api-sample-get-access-token
-[mrss sample (original solutions.brightcove.com)]: https://support.brightcove.com/cms-api-sample-mrss-generator
-[mrss-sample (modified for test account)]: https://codepen.io/anon/pen/GarKKx
+[mrss sample]: https://support.brightcove.com/cms-api-sample-mrss-generator
